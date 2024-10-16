@@ -1,6 +1,7 @@
 package com.example.acpractica1.data
 
-// Esta dataclass define los datos
+// Esta data class define los datos que se van utilizar
+// de entre los que se recogen en un CountryResponse
 data class Country(
     val ccode: String,
     val cname: String,

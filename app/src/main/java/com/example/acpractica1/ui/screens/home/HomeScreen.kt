@@ -71,16 +71,6 @@ fun HomeScreen(
         }
     }
 
-    /* val ctx = LocalContext.current.applicationContext
-    val coroutineScope = rememberCoroutineScope()
-
-    PermissionRequestEffect(permission = Manifest.permission.ACCESS_COARSE_LOCATION) { granted ->
-        coroutineScope.launch {
-            val region = if (granted) ctx.getRegion() else "US"
-            vm.onUiReady(region)
-        }
-    }*/
-
     Screen {
         // Para preparar la toolbar para que cambie color al hacer scroll (1)
         val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -135,7 +125,6 @@ fun HomeScreen(
     }
 }
 
-//Seguir https://www.youtube.com/watch?v=x8oLAW78T5k
 // Para componer la pantalla
 @Composable
 fun CountryItem(country: Country, onClick: () -> Unit) {

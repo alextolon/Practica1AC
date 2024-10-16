@@ -16,12 +16,13 @@ class DetailViewModel(private val name: String) : ViewModel() {
     // Property que recoge el estado de la UI
     var state by mutableStateOf(UiState())
         private set
-    // Data class
+    // Data class para almacenar los datos del estado
     data class UiState(
         val loading: Boolean = false,
         val country: Country? = null
     )
-    //
+    // Constructor que establece los valores del estado
+    // al tirar del viewModel de la pantalla de detalle
     init {
         viewModelScope.launch {
             state = UiState(loading = true)

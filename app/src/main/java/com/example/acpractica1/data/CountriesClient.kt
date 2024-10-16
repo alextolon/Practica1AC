@@ -34,12 +34,12 @@ object CountriesClient {
 // Interceptor que añade el token de autenticación a cada solicitud
 private fun bearerTokenInterceptor(token: String): Interceptor {
     return Interceptor { chain ->
-// Crea una nueva solicitud con el encabezado de autenticación Bearer
+        // Crea una nueva solicitud con el encabezado de autenticación Bearer
         val request = chain.request()
             .newBuilder()
             .header("Authorization", "Bearer $token") // Añade el token de autenticación al header
             .build()
-// Procede con la solicitud
+        // Procede con la solicitud
         chain.proceed(request)
     }
 }

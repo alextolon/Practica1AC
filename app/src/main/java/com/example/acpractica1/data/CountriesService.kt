@@ -16,7 +16,7 @@ interface CountriesService {
 
     // ...que pedir solamente uno concreto
     @GET("countries/{name}")
-    suspend fun findCountryByName(@Path("name") name: String): CountryResponse
+    suspend fun findCountryByName(@Path("name") name: String): CountryDataResponse
     // De ahí que el carrito que recoge resultados sea diferente
     // Es más, @Path permite incorporar la variable a la propia ruta de petición del GET
     // En cambio, @Query le pasa parámetros para realizar una consulta y recuperar los datos
