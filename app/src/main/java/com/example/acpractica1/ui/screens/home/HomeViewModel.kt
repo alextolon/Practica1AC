@@ -26,6 +26,8 @@ class HomeViewModel : ViewModel() {
             state = UiState(loading = true)
 
             state = UiState(loading = false, countries = repository.fetchAllCountries())
+            //Si se coloca un punto de ruptura en la línea anterior y se ejecuta en modo debug
+            //Se puede seleccionar repository.fetchAllCountries() para saber si coge datos de API
         }
     }
     // Clase que sólo contiene estado y no realiza ninguna operación

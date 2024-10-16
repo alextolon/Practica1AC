@@ -9,64 +9,37 @@ import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import retrofit2.create
 
 object CountriesClient {
-    private const val BTOK = "1492|C8cW8E2bPcpgQs1LssTzREt3LhBes64vh6Lf6xkg"
-    // Construye un interceptor que permita adaptar cada petición a la API
-    // para ser configurado a continuación ...
-    private val okHttpClient = okhttp3.OkHttpClient.Builder()
-        // El interceptor está fundamentado en una función
-        .addInterceptor(bearerTokenInterc(BTOK))
-        // para acabar instanciando un objeto okHttpClient con
-        // la configuración especificada en el paso anterior
-        .build()
+    // Token de autenticación para acceder a la API cogido de local.properties
+    private const val BTOK = BuildConfig.RCDB_API_KEY
 
-    // Al recuperar datos de una API en forma de cadena JSON hay
-    // que crear tantas properties como campos tenga la estructura.
+    // Configura el cliente HTTP con un interceptor para agregar el token en cada petición
+    private val okHttpClient = okhttp3.OkHttpClient.Builder()
+        .addInterceptor(bearerTokenInterceptor(BTOK)) // Interceptor para agregar el token Bearer
+        .build() // Crea el cliente HTTP configurado
+
+    // Configura la instancia de Json para serializar y deserializar datos
     private val json = Json {
-        // Con esta especie de "adapter" activado se le indica que ignore
-        // los datos que no vamos a utilizar de dicha cadena JSON.
-        ignoreUnknownKeys = true
+        ignoreUnknownKeys = true // Ignorar campos desconocidos en las respuestas JSON
     }
 
-    // Construye el objeto Retrofit para ser configurado a continuación ...
+    // Configura e instancia Retrofit para realizar peticiones HTTP a la API de países
     val instance = Retrofit.Builder()
-        // 1) indicando su dirección base
-        .baseUrl("https://restfulcountries.com/api/v1/")
-        // 2) especificando el cliente e incorporando el interceptor creado antes
-        .client(okHttpClient)
-        // 3) serializando a objeto Kotlin dado que los datos
-        // de la API se muestran en formato JSON
-        .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
-        // 5) instanciando un objeto Retrofit con la configuración
-        // especificada en los pasos anteriores
-        .build()
-        // 6) creando una implementación de la interfaz CountriesService a partir de la instancia
-        // de Retrofit. Recuerda que en esta interfaz están definidos los endpoints de la API
-        // que se van a consumir.
-        .create<CountriesService>()
-
+        .baseUrl("https://restfulcountries.com/api/v1/") // Dirección base de la API
+        .client(okHttpClient) // Asocia el cliente HTTP configurado con Retrofit
+        .addConverterFactory(json.asConverterFactory("application/json".toMediaType())) // Convierte JSON a objetos Kotlin
+        .build() // Construye la instancia de Retrofit
+        .create<CountriesService>() // Crea la implementación de la interfaz de servicio
 }
 
-// Función que gestiona la labor de modificación del request y
-// obtención del response a cargo del interceptor
-private fun bearerTokenInterc(chain: Interceptor.Chain) = chain.proceed(
-    chain.request()
-        .newBuilder()
-        .header("Authorization", "Bearer $token")
-        .build()
-)
-
-/*
-// Función que gestiona la labor de modificación del request y
-// obtención del response a cargo del interceptor
-private fun apiKeyAsQuery(chain: Interceptor.Chain) = chain.proceed(
-    chain.request()
-        .newBuilder()
-        .url(chain
-            .request()
-            .url
+// Interceptor que añade el token de autenticación a cada solicitud
+private fun bearerTokenInterceptor(token: String): Interceptor {
+    return Interceptor { chain ->
+// Crea una nueva solicitud con el encabezado de autenticación Bearer
+        val request = chain.request()
             .newBuilder()
-            .addQueryParameter("api_key", BuildConfig.RCDB_API_KEY)
-            .build())
-        .build()
-)
-*/
+            .header("Authorization", "Bearer $token") // Añade el token de autenticación al header
+            .build()
+// Procede con la solicitud
+        chain.proceed(request)
+    }
+}

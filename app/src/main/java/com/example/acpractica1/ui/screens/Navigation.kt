@@ -20,19 +20,18 @@ fun Navigation() {
         // Objeto para establecer endpoint interno para pantalla principal
         composable("home") {
             HomeScreen(onCountryClick = { country ->
-                navController.navigate("detail/${country.ccode}")
+                navController.navigate("detail/${country.cname}")
             })
         }
         // Objeto para establecer endpoint interno para pantalla detalle
-        composable("detail/{countryId}",
-            arguments = listOf(navArgument("countryId") { type = NavType.StringType })
+        composable("detail/{countryName}",
+            arguments = listOf(navArgument("countryName") { type = NavType.StringType })
         ) { backStackEntry ->
-            val countryId = requireNotNull(backStackEntry.arguments?.getString("countryId"))
+            val countryArgName = requireNotNull(backStackEntry.arguments?.getString("cname"))
             DetailScreen(
-                viewModel { DetailViewModel(countryId) },
+                viewModel { DetailViewModel(countryArgName) },
                 // Gestiona el botón <- para volver a la pantalla principal
                 onBack = { navController.popBackStack() })
         }
     }
-
 }

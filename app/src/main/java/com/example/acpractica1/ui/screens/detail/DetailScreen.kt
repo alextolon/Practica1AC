@@ -2,6 +2,7 @@ package com.example.acpractica1.ui.screens.detail
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,12 +19,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import coil.compose.AsyncImage
 import com.example.acpractica1.data.Country
@@ -43,7 +48,14 @@ fun DetailScreen(vm: DetailViewModel, onBack: () -> Unit) {
                    // Design que ubica componentes predefinidos sobre un contenedor.
             topBar = {
                 TopAppBar( // Objeto Compose para construir la barra principal de la pantalla
-                    title = { Text(text = state.country?.cname ?: "") },
+                    title = { Text(text = state.country?.cname ?: "",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 30.sp,
+                        color = Color.White)
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color(0xFF03583f)
+                    ),
                     navigationIcon = {
                         IconButton(onClick = onBack ) {
                             Icon(imageVector = Icons.AutoMirrored.Default.ArrowBack,
@@ -77,13 +89,83 @@ fun DetailScreen(vm: DetailViewModel, onBack: () -> Unit) {
                             .aspectRatio(16 / 9f)
                     )
                     Text(
-                        text = country.cname,
+                        text = country.cfname,
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
                         modifier = Modifier
-                            .padding(16.dp)
-                            .align(Alignment.CenterHorizontally),
-                        style = MaterialTheme.typography.headlineMedium
-
+                            .padding(2.dp)
                     )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Habitantes:",
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontSize = 22.sp,
+                            maxLines = 1,
+                            modifier = Modifier
+                                .padding(2.dp)
+                        )
+                        Text(
+                            text = country.cpopul,
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 1,
+                            modifier = Modifier
+                                .padding(2.dp)
+                        )
+                    }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Presidente:",
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontSize = 22.sp,
+                            maxLines = 1,
+                            modifier = Modifier
+                                .padding(2.dp)
+                        )
+                        Text(
+                            text = country.cpres,
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 1,
+                            modifier = Modifier
+                                .padding(2.dp)
+                        )
+                    }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Moneda:",
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontSize = 22.sp,
+                            maxLines = 1,
+                            modifier = Modifier
+                                .padding(2.dp)
+                        )
+                        Text(
+                            text = country.ccurrency,
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 1,
+                            modifier = Modifier
+                                .padding(2.dp)
+                        )
+                    }
                 }
             }
         }

@@ -9,22 +9,23 @@ import com.example.acpractica1.data.CountriesRepository
 import com.example.acpractica1.data.Country
 import kotlinx.coroutines.launch
 
-class DetailViewModel(private val id: String) : ViewModel() {
+class DetailViewModel(private val name: String) : ViewModel() {
 
+    // Property en la que se instancia un objeto de tipo CountriesRepository
     private val repository: CountriesRepository = CountriesRepository()
-
+    // Property que recoge el estado de la UI
     var state by mutableStateOf(UiState())
         private set
-
+    // Data class
     data class UiState(
         val loading: Boolean = false,
         val country: Country? = null
     )
-
+    //
     init {
         viewModelScope.launch {
             state = UiState(loading = true)
-            state = UiState(loading = false, country = repository.findCountryByCode(id))
+            state = UiState(loading = false, country = repository.findCountryByName(name))
         }
     }
 }
