@@ -20,7 +20,7 @@ class CountriesRepository {
             // al tipo Country de cada pais contenido
             .map { it.toDomainModel() }
     // Función que busca un set de países por continente
-    suspend fun fetchCountriesByCont(continent: MutableState<String>): List<Country> =
+    suspend fun fetchCountriesByCont(continent: String): List<Country> =
         CountriesClient
             // instancia un objeto CountriesClient para así...
             .instance

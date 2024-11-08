@@ -84,7 +84,7 @@ fun HomeScreen(
     val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
         coroutineScope.launch {
-            vm.onUiReady(contElegido)
+            vm.onUiReady()
         }
     }
 
@@ -118,7 +118,9 @@ fun HomeScreen(
                         )
                     },
                     actions = {
-                        TopAppBarDropdownMenu(contElegido)
+                        TopAppBarDropdownMenu { continentSelected ->
+                            vm.onContinentSelected(continentSelected)
+                        }
                     },
                     scrollBehavior = scrollBehavior
                 )
@@ -153,10 +155,12 @@ fun HomeScreen(
 }
 
 @Composable
-fun TopAppBarDropdownMenu(contElegido: MutableState<String>) {
+fun TopAppBarDropdownMenu(
+    onContinentChange: (String) -> Unit
+) {
     val menuDesplegado = remember { mutableStateOf(false) }
     val menuContinentes =
-        listOf("Europe", "North America", "South America", "Asia", "The Caribean", "Africa", "Australia", "Central America", "Oceana")
+        listOf("All", "Europe", "North America", "South America", "Asia", "The Caribean", "Africa", "Australia", "Central America", "Oceana")
     // Para que el icono cambie al estar o no desplegado el menú
     val icon = if (menuDesplegado.value)
         Icons.Filled.KeyboardArrowUp
@@ -190,9 +194,8 @@ fun TopAppBarDropdownMenu(contElegido: MutableState<String>) {
                     fontSize = 16.sp
                 )},
                 onClick = {
+                    onContinentChange(opcion)
                     menuDesplegado.value = false
-                    contElegido.value = opcion
-
                 },
             )
         }

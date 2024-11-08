@@ -15,7 +15,7 @@ interface CountriesService {
     // ...que solicitar un set de países por continente...
     //@GET("countries?continent={continent}") // Error encontrado
     @GET("countries")
-    suspend fun fetchCountriesByCont(@Query("continent") continent: MutableState<String>): CountriesResponse
+    suspend fun fetchCountriesByCont(@Query("continent") continent: String): CountriesResponse
 
     // ...que pedir solamente uno concreto
     @GET("countries/{name}")
