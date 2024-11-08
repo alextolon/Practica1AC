@@ -63,7 +63,9 @@ fun DetailScreen(vm: DetailViewModel, onBack: () -> Unit) {
                     navigationIcon = {
                         IconButton(onClick = onBack ) {
                             Icon(imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                                contentDescription = stringResource(id = R.string.back))
+                                contentDescription = stringResource(id = R.string.back),
+                                tint = Color.White
+                            )
                         }
                     }
                 )

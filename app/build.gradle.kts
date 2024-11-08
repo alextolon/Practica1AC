@@ -8,12 +8,12 @@ plugins {
 
 android {
     namespace = "com.example.acpractica1"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.acpractica1"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -68,6 +68,7 @@ dependencies {
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.compose.material.iconsExtended)
     implementation(libs.androidx.material3)
     implementation(libs.coil.compose)
     implementation(libs.androidx.navigation.compose)

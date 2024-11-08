@@ -1,5 +1,6 @@
 package com.example.acpractica1.ui.screens.home
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -16,16 +17,21 @@ class HomeViewModel : ViewModel() {
     // Sólo puede modificarse desde dentro de esta clase
     var state by mutableStateOf(UiState())
         private set
-    // Property que enlaza objeto de tipo MoviesRepository
-    // que contiene método fecthPopularMovies
+    // Property que enlaza objeto de tipo CountriesRepository
+    // que contiene los métodos fecthAllCountries() y fetchCountriesByCont()
     val repository = CountriesRepository()
 
     // Simula que primero está cargando (Circulito) y luego  muestra información
-    fun onUiReady() {
+    // Por defecto, muestra todos los países. Si elige continente los de esa elección.
+    fun onUiReady(contElegido: MutableState<String>) {
         viewModelScope.launch {
             state = UiState(loading = true)
-
-            state = UiState(loading = false, countries = repository.fetchAllCountries())
+            // Si no detecta elección de continente
+            if(contElegido.value == "")
+                state = UiState(loading = false, countries = repository.fetchAllCountries())
+            // Si detecta elección de continente
+            else
+                state = UiState(loading = false, countries = repository.fetchCountriesByCont(contElegido))
             //Si se coloca un punto de ruptura en la línea anterior y se ejecuta en modo debug
             //Se puede seleccionar repository.fetchAllCountries() para saber si coge datos de API
         }

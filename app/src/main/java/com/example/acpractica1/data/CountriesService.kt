@@ -1,5 +1,6 @@
 package com.example.acpractica1.data
 
+import androidx.compose.runtime.MutableState
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -8,11 +9,13 @@ import retrofit2.http.Query
 interface CountriesService {
     // No es lo mismo solicitar el set de países al completo...
     @GET("countries")
+    //Queda asociada esta función con la anotación anterior
     suspend fun fetchAllCountries(): CountriesResponse
 
     // ...que solicitar un set de países por continente...
-    @GET("countries?continent={continent}")
-    suspend fun fetchCountriesByCont(@Query("continent") continent: String): CountriesResponse
+    //@GET("countries?continent={continent}") // Error encontrado
+    @GET("countries")
+    suspend fun fetchCountriesByCont(@Query("continent") continent: MutableState<String>): CountriesResponse
 
     // ...que pedir solamente uno concreto
     @GET("countries/{name}")

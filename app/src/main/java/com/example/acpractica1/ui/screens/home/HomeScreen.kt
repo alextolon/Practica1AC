@@ -1,5 +1,6 @@
 package com.example.acpractica1.ui.screens.home
 
+import androidx.compose.runtime.Composable
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -7,35 +8,49 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -43,7 +58,6 @@ import coil.compose.AsyncImage
 import com.example.acpractica1.ui.theme.ACPractica1Theme
 import com.example.acpractica1.data.Country
 import com.example.acpractica1.R
-import com.example.acpractica1.ui.theme.GreenTAB
 import kotlinx.coroutines.launch
 
 @Composable
@@ -64,10 +78,13 @@ fun HomeScreen(
     onCountryClick: (Country) -> Unit,
     vm: HomeViewModel = viewModel { HomeViewModel() }
 ) {
+    // Almacén del estado del continente elegido
+    val contElegido  = remember { mutableStateOf("Europe") }
+    // Lanzamiento de la corrutina que vigila los cambios de estado de la UI
     val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
         coroutineScope.launch {
-            vm.onUiReady()
+            vm.onUiReady(contElegido)
         }
     }
 
@@ -78,26 +95,34 @@ fun HomeScreen(
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = {
-                        Box(modifier = Modifier
-                            .fillMaxSize(),
-                            //.background(Color(0xFF03583f)),
-                            contentAlignment = Alignment.Center)
-                        {
-                            Text(stringResource(id = R.string.app_name),
-                                fontWeight = FontWeight.Bold, fontSize = 26.sp, color = Color.White)
+                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                        containerColor = Color(0xFF03583f),
+                        //MaterialTheme.colorScheme.primaryContainer,
+                        titleContentColor = MaterialTheme.colorScheme.primary,
+                    ),
+                    navigationIcon = {
+                        IconButton(onClick = { /*TODO*/ }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.planet),
+                                contentDescription = "Globo",
+                                tint = Color.Unspecified
+                            )
                         }
                     },
-                    // Esto soluciona el efecto "start padding" del
-                    // background comentado siete líneas antes
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Color(0xFF03583f)
-                    ),
-                    // (2)
+                    title = {
+                        Text(stringResource(id = R.string.app_name),
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 26.sp,
+                            color = Color.White,
+                            textAlign = TextAlign.Center
+                        )
+                    },
+                    actions = {
+                        TopAppBarDropdownMenu(contElegido)
+                    },
                     scrollBehavior = scrollBehavior
                 )
             },
-            //(3)
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
         ) { padding ->
 
@@ -115,12 +140,61 @@ fun HomeScreen(
                 }
             }
             // Cuando deje de cargar, muestra la lista
-            LazyColumn {
+            LazyColumn(
+                contentPadding = padding //Evita que TopBar coma zona de contenido
+            ) {
                 // Aquí generas cada item de lista a partir
                 items(state.countries) {
                     CountryItem(country = it) { onCountryClick(it) }
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun TopAppBarDropdownMenu(contElegido: MutableState<String>) {
+    val menuDesplegado = remember { mutableStateOf(false) }
+    val menuContinentes =
+        listOf("Europe", "North America", "South America", "Asia", "The Caribean", "Africa", "Australia", "Central America", "Oceana")
+    // Para que el icono cambie al estar o no desplegado el menú
+    val icon = if (menuDesplegado.value)
+        Icons.Filled.KeyboardArrowUp
+    else
+        Icons.Filled.KeyboardArrowDown
+    Box(
+        Modifier
+            .wrapContentSize(Alignment.TopEnd)
+    ) {
+        IconButton(onClick = {
+            menuDesplegado.value = true
+        }) {
+            Icon(
+                icon,
+                modifier = Modifier.fillMaxSize(1.0F),
+                contentDescription = "Menú Continentes",
+                tint = Color.White
+            )
+        }
+    }
+
+    DropdownMenu(
+        expanded = menuDesplegado.value,
+        onDismissRequest = { menuDesplegado.value = false },
+    ) {
+        // Integra en una sola lambda todos los MenuItem del desplegable
+        menuContinentes.forEach { opcion ->
+            DropdownMenuItem(
+                text = { Text(opcion,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
+                )},
+                onClick = {
+                    menuDesplegado.value = false
+                    contElegido.value = opcion
+
+                },
+            )
         }
     }
 }

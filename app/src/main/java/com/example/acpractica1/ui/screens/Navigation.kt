@@ -23,20 +23,19 @@ fun Navigation() {
                 navController.navigate("detail/${country.cname}")
             })
         }
+
         // Objeto para establecer endpoint interno para pantalla detalle
         composable("detail/{countryName}",
             arguments = listOf(
                 navArgument(
                     "countryName")
-                {
-                    type = NavType.StringType
-                }
+                { type = NavType.StringType }
             )
         ) { backStackEntry ->
             val countryArgName = requireNotNull(backStackEntry.arguments?.getString("countryName"))
             DetailScreen(
                 viewModel { DetailViewModel(countryArgName) },
-                // Gestiona el botón <- para volver a la pantalla principal
+                // Gestiona el botón <- para volver a la pantalla que llamó
                 onBack = { navController.popBackStack() })
         }
     }
