@@ -48,9 +48,12 @@ data class CountryResponse(
 // Desglose del tipo compuesto Covid19
 @Serializable
 data class Covid19(
-    val total_case: String?,
-    val total_deaths: String?,
-    val last_updated: String?
+    //val total_case: String?,
+    @SerialName("total_case") val cases: String?,
+    //val total_deaths: String?,
+    @SerialName("total_deaths") val deaths: String?,
+    //val last_updated: String?
+    @SerialName("last_updated") val lastdate: String?,
 )
 
 // Desglose del tipo compuesto CurrentPresident

@@ -1,7 +1,5 @@
 package com.example.acpractica1.data
 
-import androidx.compose.runtime.MutableState
-
 // Esta clase fundamenta el repositorio
 class CountriesRepository {
     // Función que recupera el set de países al completo
@@ -64,4 +62,7 @@ private fun CountryResponse.toDomainModel(): Country =
         cpres = current_president?.name ?: "",
         cfname = fname ?: "",
         ccurrency = currency ?: "",
+        ccases = covid19?.cases ?: "",
+        cdeaths = covid19?.deaths ?: "",
+        ccovupdated = covid19?.lastdate ?: "",
     )

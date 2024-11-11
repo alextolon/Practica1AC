@@ -1,5 +1,6 @@
 package com.example.acpractica1.ui.screens.detail
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -24,11 +26,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -38,6 +43,9 @@ import coil.compose.AsyncImage
 import com.example.acpractica1.data.Country
 import com.example.acpractica1.R
 import com.example.acpractica1.ui.screens.home.Screen
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -99,6 +107,7 @@ fun DetailScreen(vm: DetailViewModel, onBack: () -> Unit) {
                                 .fillMaxWidth()
                                 .aspectRatio(16 / 9f)
                         )
+                        Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = country.cfname,
                             style = MaterialTheme.typography.headlineMedium,
@@ -180,6 +189,108 @@ fun DetailScreen(vm: DetailViewModel, onBack: () -> Unit) {
                             modifier = Modifier
                                 .padding(2.dp)
                         )
+                    }
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(18.dp)
+                            .clip(RoundedCornerShape(
+                                15.dp, 15.dp, 15.dp, 15.dp
+                            ))
+                            .background(color = Color(0xFFDDA0DD)),
+                        horizontalAlignment = Alignment.Start
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(4.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = "COVID-19 Info",
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontSize = 22.sp,
+                                maxLines = 1,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier
+                                    .padding(2.dp)
+                            )
+                        }
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(2.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Casos:",
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontSize = 22.sp,
+                                maxLines = 1,
+                                modifier = Modifier
+                                    .padding(6.dp)
+                            )
+                            Text(
+                                text = country.ccases,
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontSize = 22.sp,
+                                fontWeight = FontWeight.Bold,
+                                maxLines = 1,
+                                modifier = Modifier
+                                    .padding(2.dp)
+                            )
+                        }
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(2.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Muertes:",
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontSize = 22.sp,
+                                maxLines = 1,
+                                modifier = Modifier
+                                    .padding(6.dp)
+                            )
+                            Text(
+                                text = country.cdeaths,
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontSize = 22.sp,
+                                fontWeight = FontWeight.Bold,
+                                maxLines = 1,
+                                modifier = Modifier
+                                    .padding(2.dp)
+                            )
+                        }
+                        Column(modifier = Modifier
+                            .fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally)
+                        {
+                            Text(
+                                text = "Última Actualización:",
+                                modifier = Modifier
+                                    .padding(6.dp),
+                                fontStyle = FontStyle.Italic,
+                                fontSize = 22.sp,
+                                maxLines = 1,
+                            )
+                            Text(
+                                text = DateTimeFormatter
+                                    .ofPattern("EEEE dd 'de' MMMM 'de' yyyy 'a las' HH:mm:ss")
+                                    .withLocale(Locale("es", "ES"))
+                                    .format(ZonedDateTime.parse(country.ccovupdated)),
+                                modifier = Modifier
+                                    .padding(2.dp),
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontSize = 22.sp,
+                                fontWeight = FontWeight.Bold,
+                                maxLines = 2
+
+                            )
+                        }
                     }
                 }
             }
