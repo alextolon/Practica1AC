@@ -35,12 +35,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
 import coil.compose.AsyncImage
-import com.example.acpractica1.data.Country
 import com.example.acpractica1.R
 import com.example.acpractica1.ui.screens.home.Screen
 import java.time.ZonedDateTime
@@ -57,7 +54,7 @@ fun DetailScreen(vm: DetailViewModel, onBack: () -> Unit) {
     val state = vm.state
     Screen { // Objeto Compose para construir la pantalla
         Scaffold(  // Objeto Compose de layout para crear interfaces con Material
-                   // Design que ubica componentes predefinidos sobre un contenedor.
+            // Design que ubica componentes predefinidos sobre un contenedor.
             topBar = {
                 TopAppBar( // Objeto Compose para construir la barra principal de la pantalla
                     title = { Text(text = state.country?.cname ?: "",

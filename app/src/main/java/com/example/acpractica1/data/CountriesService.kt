@@ -1,6 +1,5 @@
 package com.example.acpractica1.data
 
-import androidx.compose.runtime.MutableState
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

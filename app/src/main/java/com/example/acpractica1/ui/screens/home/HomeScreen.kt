@@ -160,7 +160,7 @@ fun TopAppBarDropdownMenu(
 ) {
     val menuDesplegado = remember { mutableStateOf(false) }
     val menuContinentes =
-        listOf("All", "Europe", "North America", "South America", "Asia", "The Caribean", "Africa", "Australia", "Central America", "Oceana")
+        listOf("All(asc)", "All(desc)", "Europe", "North America", "South America", "Asia", "The Caribean", "Africa", "Australia", "Central America", "Oceana")
     // Para que el icono cambie al estar o no desplegado el menú
     val icon = if (menuDesplegado.value)
         Icons.Filled.KeyboardArrowUp
