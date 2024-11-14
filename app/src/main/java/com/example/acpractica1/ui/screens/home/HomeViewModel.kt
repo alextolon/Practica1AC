@@ -1,6 +1,5 @@
 package com.example.acpractica1.ui.screens.home
 
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -40,10 +39,12 @@ class HomeViewModel : ViewModel() {
             state = UiState(
                 loading = false,
                 countries =
-                if (continent == "All")
-                    repository.fetchAllCountries()
-                else
-                    repository.fetchCountriesByCont(continent)
+                when (continent) {
+                    "All(asc)" -> repository.fetchAllCountries()
+                    "All(desc)" -> repository.fetchAllCountries()
+                        .sortedByDescending { it.cname }
+                    else -> repository.fetchCountriesByCont(continent)
+                }
             )
         }
     }

@@ -11,5 +11,8 @@ data class Country(
     val cpopul: String,
     val cpres: String,
     val cfname: String,
-    val ccurrency: String
+    val ccurrency: String,
+    val ccases: String,
+    val cdeaths: String,
+    val ccovupdated: String
 )
