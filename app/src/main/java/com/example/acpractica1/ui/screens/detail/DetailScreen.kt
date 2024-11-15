@@ -16,18 +16,24 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,13 +47,15 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextIndent
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import coil.compose.AsyncImage
 import com.example.acpractica1.R
 import com.example.acpractica1.ui.screens.home.Screen
@@ -66,6 +74,23 @@ fun DetailScreen(vm: DetailViewModel, onBack: () -> Unit) {
     // y poder llamarlo de una manera más simple
     val state by vm.state.collectAsState()
     //val scrollBehaviour = TopAppBarDefaults.pinnedScrollBehavior()
+    val lifecycle = LocalLifecycleOwner.current
+    //
+    val snackbarHostState = remember { SnackbarHostState() }
+    // Suscripción al channel creado en el ViewModel
+    LaunchedEffect(vm, lifecycle) {
+        lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            vm.events.collect { event ->
+                when(event) {
+                    is DetailViewModel.UIEvent.MuestraMensaje -> {
+                        snackbarHostState.currentSnackbarData?.dismiss()
+                        snackbarHostState.showSnackbar(event.mensaje)
+                    }
+                }
+            }
+        }
+    }
+
     Screen { // Objeto Compose para construir la pantalla
         Scaffold(  // Objeto Compose de layout para crear interfaces con Material
             // Design que ubica componentes predefinidos sobre un contenedor.
@@ -96,6 +121,12 @@ fun DetailScreen(vm: DetailViewModel, onBack: () -> Unit) {
                     //scrollBehavior = scrollBehaviour
                 )
             },
+            floatingActionButton = {
+                FloatingActionButton(onClick = { vm.onFriendlyClick() }) {
+                    Icon(imageVector = Icons.Default.FavoriteBorder, contentDescription = "Friendly Country")
+                }
+            },
+            snackbarHost = { SnackbarHost(hostState = snackbarHostState)},
             // Para asegurar que al rotar el dispositivo pueda hacer scroll
             //modifier = Modifier.nestedScroll(scrollBehaviour.nestedScrollConnection)
         ) { padding ->
@@ -147,7 +178,7 @@ fun DetailScreen(vm: DetailViewModel, onBack: () -> Unit) {
                     Text(text = buildAnnotatedString { 
                         PropertyL1(name = "Habitantes", value = country.cpopul)
                         PropertyL1(name = "Presidente", value = country.cpres)
-                        PropertyL1(name = "Moneda", value = country.ccurrency)
+                        PropertyL1(name = "Moneda", value = country.ccurrency, end = true)
                     })
                     // sustituyendo esto
                     /*Row(
@@ -261,7 +292,7 @@ fun DetailScreen(vm: DetailViewModel, onBack: () -> Unit) {
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(text = buildAnnotatedString {
                             PropertyL1(name = "Casos", value = country.ccases)
-                            PropertyL1(name = "Muertes", value = country.cdeaths)
+                            PropertyL1(name = "Muertes", value = country.cdeaths, end = true)
                         })
                         /*Row(
                             modifier = Modifier
@@ -318,22 +349,23 @@ fun DetailScreen(vm: DetailViewModel, onBack: () -> Unit) {
                             Text(
                                 text = "Última Actualización:",
                                 modifier = Modifier
-                                    .padding(6.dp),
+                                    .padding(0.dp, 18.dp, 0.dp, 0.dp),
                                 fontStyle = FontStyle.Italic,
                                 fontSize = 22.sp,
                                 maxLines = 1,
                             )
                             Text(
                                 text = DateTimeFormatter
-                                    .ofPattern("EEEE dd 'de' MMMM 'de' yyyy 'a las' HH:mm:ss")
+                                    .ofPattern("EEEE dd 'de' MMMM 'de' yyyy \n'a las' HH:mm:ss")
                                     .withLocale(Locale("es", "ES"))
                                     .format(ZonedDateTime.parse(country.ccovupdated)),
                                 modifier = Modifier
                                     .padding(2.dp),
                                 style = MaterialTheme.typography.bodyLarge,
-                                fontSize = 22.sp,
+                                fontSize = 20.sp,
                                 textAlign = TextAlign.Center,
                                 fontWeight = FontWeight.Bold,
+                                fontStyle = FontStyle.Italic,
                                 maxLines = 2
                             )
                         }
