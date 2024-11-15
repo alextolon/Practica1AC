@@ -11,28 +11,38 @@ import com.example.acpractica1.ui.screens.detail.DetailScreen
 import com.example.acpractica1.ui.screens.detail.DetailViewModel
 import com.example.acpractica1.ui.screens.home.HomeScreen
 
+// Con esto etiquetamos las rutas para no tener que hardcodearlas en el código
+sealed class NavScreen(val route: String) {
+    data object Home : NavScreen("home")
+    data object Detail : NavScreen("detail/{${NavArgs.CountryName.key}}")
+    fun formaRuta(countryName: String) = "detail/${countryName}"
+}
+// Con esto etiquetamos los argumentos para no tener que hardcodearlos en el código
+enum class NavArgs(val key: String) {
+    CountryName("countryName")
+}
 
 @Composable
 fun Navigation() {
     val navController = rememberNavController()
     // Objeto principal que concentra los elementos de navegación
-    NavHost(navController = navController , startDestination = "home") {
+    NavHost(navController = navController , startDestination = NavScreen.Home.route) {
         // Objeto para establecer endpoint interno para pantalla principal
-        composable("home") {
+        composable(NavScreen.Home.route) {
             HomeScreen(onCountryClick = { country ->
-                navController.navigate("detail/${country.cname}")
+                navController.navigate(NavScreen.Detail.formaRuta(country.cname))
             })
         }
 
         // Objeto para establecer endpoint interno para pantalla detalle
-        composable("detail/{countryName}",
+        composable(NavScreen.Detail.route,
             arguments = listOf(
                 navArgument(
-                    "countryName")
+                    NavArgs.CountryName.key)
                 { type = NavType.StringType }
             )
         ) { backStackEntry ->
-            val countryArgName = requireNotNull(backStackEntry.arguments?.getString("countryName"))
+            val countryArgName = requireNotNull(backStackEntry.arguments?.getString(NavArgs.CountryName.key))
             DetailScreen(
                 viewModel { DetailViewModel(countryArgName) },
                 // Gestiona el botón <- para volver a la pantalla que llamó

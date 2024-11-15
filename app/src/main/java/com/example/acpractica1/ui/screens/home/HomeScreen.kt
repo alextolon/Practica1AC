@@ -8,7 +8,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,12 +34,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -78,8 +76,6 @@ fun HomeScreen(
     onCountryClick: (Country) -> Unit,
     vm: HomeViewModel = viewModel { HomeViewModel() }
 ) {
-    // Almacén del estado del continente elegido
-    val contElegido  = remember { mutableStateOf("Europe") }
     // Lanzamiento de la corrutina que vigila los cambios de estado de la UI
     val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
@@ -119,7 +115,7 @@ fun HomeScreen(
                     },
                     actions = {
                         TopAppBarDropdownMenu { continentSelected ->
-                            vm.onContinentSelected(continentSelected)
+                            vm.onMenuSelected(continentSelected)
                         }
                     },
                     scrollBehavior = scrollBehavior
@@ -128,7 +124,9 @@ fun HomeScreen(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
         ) { padding ->
 
-            val state = vm.state
+            // Al utilizar StateFlow en HomeViewModel (estructura Kotlin pero no de Compose)
+            // hay que transformarlo ahora en un estado de Compose
+            val state by vm.state.collectAsState()
             // Controla lo que se muestra si está cargando o no
             if (state.loading) {
                 // En caso de estar cargando, muestra el circulito
