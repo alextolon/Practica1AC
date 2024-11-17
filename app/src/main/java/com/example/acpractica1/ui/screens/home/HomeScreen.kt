@@ -76,6 +76,7 @@ fun HomeScreen(
     onCountryClick: (Country) -> Unit,
     vm: HomeViewModel = viewModel { HomeViewModel() }
 ) {
+    val homeState = rememberHomeState()
     // Lanzamiento de la corrutina que vigila los cambios de estado de la UI
     val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
@@ -85,9 +86,6 @@ fun HomeScreen(
     }
 
     Screen {
-        // Para preparar la toolbar para que cambie color al hacer scroll (1)
-        val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -118,10 +116,10 @@ fun HomeScreen(
                             vm.onMenuSelected(continentSelected)
                         }
                     },
-                    scrollBehavior = scrollBehavior
+                    scrollBehavior = homeState.scrollBehavior
                 )
             },
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
+            modifier = Modifier.nestedScroll(homeState.scrollBehavior.nestedScrollConnection)
         ) { padding ->
 
             // Al utilizar StateFlow en HomeViewModel (estructura Kotlin pero no de Compose)

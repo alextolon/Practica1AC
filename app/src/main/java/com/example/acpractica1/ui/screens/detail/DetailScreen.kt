@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -19,21 +20,18 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,9 +51,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.repeatOnLifecycle
 import coil.compose.AsyncImage
 import com.example.acpractica1.R
 import com.example.acpractica1.ui.screens.home.Screen
@@ -73,33 +68,23 @@ fun DetailScreen(vm: DetailViewModel, onBack: () -> Unit) {
     // Para no trabajar directamente con el estado que proporciona el ViewModel
     // y poder llamarlo de una manera más simple
     val state by vm.state.collectAsState()
-    //val scrollBehaviour = TopAppBarDefaults.pinnedScrollBehavior()
-    val lifecycle = LocalLifecycleOwner.current
-    //
-    val snackbarHostState = remember { SnackbarHostState() }
-    // Suscripción al channel creado en el ViewModel
-    LaunchedEffect(vm, lifecycle) {
-        lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-            vm.events.collect { event ->
-                when(event) {
-                    is DetailViewModel.UIEvent.MuestraMensaje -> {
-                        snackbarHostState.currentSnackbarData?.dismiss()
-                        snackbarHostState.showSnackbar(event.mensaje)
-                    }
-                }
-            }
-        }
+    val detailState = rememberDetailState()
+    detailState.MuesnackMensEffect(mensnack = state.mesnack) {
+        vm.onMuestraMens()
     }
 
     Screen { // Objeto Compose para construir la pantalla
-        Scaffold(  // Objeto Compose de layout para crear interfaces con Material
+        Scaffold(
+            // Objeto Compose de layout para crear interfaces con Material
             // Design que ubica componentes predefinidos sobre un contenedor.
             topBar = {
-                TopAppBar( // Objeto Compose para construir la barra principal de la pantalla
+                TopAppBar(
+                    // Objeto Compose para construir la barra principal de la pantalla
                     title = {
                         val nompais = state.country?.cname ?: ""
                         val nomCont = state.country?.ccontinent ?: ""
-                        Text(text = "$nompais($nomCont)",
+                        Text(
+                            text = "$nompais($nomCont)",
                             fontWeight = FontWeight.Bold,
                             fontSize = 26.sp,
                             maxLines = 1,
@@ -111,24 +96,31 @@ fun DetailScreen(vm: DetailViewModel, onBack: () -> Unit) {
                         containerColor = Color(0xFF03583f)
                     ),
                     navigationIcon = {
-                        IconButton(onClick = onBack ) {
-                            Icon(imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                        IconButton(onClick = onBack) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Default.ArrowBack,
                                 contentDescription = stringResource(id = R.string.back),
                                 tint = Color.White
                             )
                         }
                     },
-                    //scrollBehavior = scrollBehaviour
+                    scrollBehavior = detailState.scrollBehavior
                 )
             },
             floatingActionButton = {
-                FloatingActionButton(onClick = { vm.onFriendlyClick() }) {
-                    Icon(imageVector = Icons.Default.FavoriteBorder, contentDescription = "Friendly Country")
+                ExtendedFloatingActionButton(onClick = { vm.onFriendlyClick() },
+                    containerColor = GreyBack) {
+                    Icon(
+                        imageVector = Icons.Default.FavoriteBorder,
+                        contentDescription = "Friendly Country",
+                        modifier = Modifier.size(26.dp)
+                    )
+                    Text(text = "  Amable", fontSize = 20.sp)
                 }
             },
-            snackbarHost = { SnackbarHost(hostState = snackbarHostState)},
+            snackbarHost = { SnackbarHost(hostState = detailState.snackbarHostState) },
             // Para asegurar que al rotar el dispositivo pueda hacer scroll
-            //modifier = Modifier.nestedScroll(scrollBehaviour.nestedScrollConnection)
+            modifier = Modifier.nestedScroll(detailState.scrollBehavior.nestedScrollConnection)
         ) { padding ->
             if (state.loading) {
                 Box(
@@ -370,6 +362,7 @@ fun DetailScreen(vm: DetailViewModel, onBack: () -> Unit) {
                             )
                         }
                     }
+
                 }
             }
         }

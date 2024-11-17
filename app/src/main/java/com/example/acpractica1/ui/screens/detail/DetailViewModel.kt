@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class DetailViewModel(private val name: String) : ViewModel() {
@@ -22,16 +23,17 @@ class DetailViewModel(private val name: String) : ViewModel() {
     // Data class para almacenar los datos del estado
     data class UiState(
         val loading: Boolean = false,
-        val country: Country? = null
+        val country: Country? = null,
+        val mesnack: String? = null
     )
 
     // Para la generación de un channel hace falta un evento propio de UI
-    sealed interface UIEvent {
+    /*sealed interface UIEvent {
         data class MuestraMensaje(val mensaje: String) : UIEvent
-    }
+    }*/
 
-    private val _events = Channel<UIEvent>()
-    val events: Flow<UIEvent> = _events.receiveAsFlow()
+    /*private val _events = Channel<UIEvent>()
+    val events: Flow<UIEvent> = _events.receiveAsFlow()*/
 
     // Constructor que establece los valores del estado
     // al tirar del viewModel de la pantalla de detalle
@@ -43,6 +45,11 @@ class DetailViewModel(private val name: String) : ViewModel() {
     }
 
     fun onFriendlyClick() {
-        _events.trySend(UIEvent.MuestraMensaje("País aceptable"))
+        //_events.trySend(UIEvent.MuestraMensaje("País aceptable"))
+        _state.update { it.copy(mesnack = "País aceptable") }
+    }
+
+    fun onMuestraMens() {
+        _state.update { it.copy(mesnack = null) }
     }
 }
