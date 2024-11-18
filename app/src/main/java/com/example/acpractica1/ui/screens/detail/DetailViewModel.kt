@@ -13,6 +13,11 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+sealed interface DetailAction {
+    data object FriendlyClick: DetailAction
+    data object MuestraMens: DetailAction
+}
+
 class DetailViewModel(private val name: String) : ViewModel() {
 
     // Property en la que se instancia un objeto de tipo CountriesRepository
@@ -44,12 +49,19 @@ class DetailViewModel(private val name: String) : ViewModel() {
         }
     }
 
-    fun onFriendlyClick() {
+    fun onAction(action: DetailAction) {
+        when(action) {
+            is DetailAction.FriendlyClick -> onFriendlyClick()
+            is DetailAction.MuestraMens -> onMuestraMens()
+        }
+    }
+
+    private fun onFriendlyClick() {
         //_events.trySend(UIEvent.MuestraMensaje("País aceptable"))
         _state.update { it.copy(mesnack = "País aceptable") }
     }
 
-    fun onMuestraMens() {
+    private fun onMuestraMens() {
         _state.update { it.copy(mesnack = null) }
     }
 }

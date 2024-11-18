@@ -70,7 +70,8 @@ fun DetailScreen(vm: DetailViewModel, onBack: () -> Unit) {
     val state by vm.state.collectAsState()
     val detailState = rememberDetailState()
     detailState.MuesnackMensEffect(mensnack = state.mesnack) {
-        vm.onMuestraMens()
+        //vm.onMuestraMens()
+        vm.onAction(DetailAction.MuestraMens)
     }
 
     Screen { // Objeto Compose para construir la pantalla
@@ -108,7 +109,7 @@ fun DetailScreen(vm: DetailViewModel, onBack: () -> Unit) {
                 )
             },
             floatingActionButton = {
-                ExtendedFloatingActionButton(onClick = { vm.onFriendlyClick() },
+                ExtendedFloatingActionButton(onClick = { vm.onAction(DetailAction.FriendlyClick) },
                     containerColor = GreyBack) {
                     Icon(
                         imageVector = Icons.Default.FavoriteBorder,
