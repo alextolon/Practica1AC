@@ -11,15 +11,15 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 // Forma de generar viewmodel heredando de ViewModel
-class HomeViewModel : ViewModel() {
+class HomeViewModel(
+    // Property que enlaza objeto de tipo CountriesRepository
+    // que contiene los métodos fecthAllCountries() y fetchCountriesByCont()
+    private val repository: CountriesRepository
+) : ViewModel() {
     // Property que mantiene info variable con formato UIState
     // Sólo puede modificarse desde dentro de esta clase
     private val _state =  MutableStateFlow(UiState())
     val state: StateFlow<UiState> get() = _state.asStateFlow()
-
-    // Property que enlaza objeto de tipo CountriesRepository
-    // que contiene los métodos fecthAllCountries() y fetchCountriesByCont()
-    val repository = CountriesRepository()
 
     // Simula que primero está cargando (Circulito) y luego  muestra información
     // Por defecto, muestra todos los países. Si elige continente los de esa elección.

@@ -18,10 +18,14 @@ sealed interface DetailAction {
     data object MuestraMens: DetailAction
 }
 
-class DetailViewModel(private val name: String) : ViewModel() {
-
+class DetailViewModel(
+    private val name: String,
     // Property en la que se instancia un objeto de tipo CountriesRepository
-    private val repository: CountriesRepository = CountriesRepository()
+    private val repository: CountriesRepository
+) : ViewModel() {
+
+
+    //private val repository: CountriesRepository = CountriesRepository()
     // Property que recoge el estado de la UI
     private val _state = MutableStateFlow(UiState())
     val state: StateFlow<UiState> get() = _state.asStateFlow()

@@ -7,9 +7,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.acpractica1.data.CountriesRepository
+import com.example.acpractica1.data.datasource.CountriesRemoteDataSource
 import com.example.acpractica1.ui.screens.detail.DetailScreen
 import com.example.acpractica1.ui.screens.detail.DetailViewModel
 import com.example.acpractica1.ui.screens.home.HomeScreen
+import com.example.acpractica1.ui.screens.home.HomeViewModel
 
 // Con esto etiquetamos las rutas para no tener que hardcodearlas en el código
 sealed class NavScreen(val route: String) {
@@ -25,13 +28,17 @@ enum class NavArgs(val key: String) {
 @Composable
 fun Navigation() {
     val navController = rememberNavController()
+    val countriesRepository = CountriesRepository(remoteDataSource = CountriesRemoteDataSource())
     // Objeto principal que concentra los elementos de navegación
     NavHost(navController = navController , startDestination = NavScreen.Home.route) {
         // Objeto para establecer endpoint interno para pantalla principal
         composable(NavScreen.Home.route) {
-            HomeScreen(onCountryClick = { country ->
-                navController.navigate(NavScreen.Detail.formaRuta(country.cname))
-            })
+            HomeScreen(
+                onCountryClick = { country ->
+                    navController.navigate(NavScreen.Detail.formaRuta(country.cname))
+                },
+                viewModel { HomeViewModel(countriesRepository) }
+            )
         }
 
         // Objeto para establecer endpoint interno para pantalla detalle
@@ -44,7 +51,7 @@ fun Navigation() {
         ) { backStackEntry ->
             val countryArgName = requireNotNull(backStackEntry.arguments?.getString(NavArgs.CountryName.key))
             DetailScreen(
-                viewModel { DetailViewModel(countryArgName) },
+                viewModel { DetailViewModel(countryArgName, countriesRepository) },
                 // Gestiona el botón <- para volver a la pantalla que llamó
                 onBack = { navController.popBackStack() })
         }

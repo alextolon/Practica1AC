@@ -9,10 +9,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 
 @OptIn(ExperimentalMaterial3Api::class)
+// Los estados, antes en el ViewModel, se concentran en esta clase
 class DetailState(
     val scrollBehavior: TopAppBarScrollBehavior,
     val snackbarHostState: SnackbarHostState
 ) {
+    // Así como la función que muestra el Snackbar
     @Composable
     fun MuesnackMensEffect(mensnack: String?, onMuestraMens: () -> Unit) {
         LaunchedEffect(mensnack) {

@@ -1,14 +1,13 @@
-package com.example.acpractica1.data
+package com.example.acpractica1.data.datasource
 
-import com.example.acpractica1.data.datasource.CountriesRemoteDataSource
+import com.example.acpractica1.data.CountriesClient
+import com.example.acpractica1.data.Country
+import com.example.acpractica1.data.CountryResponse
 
-// Esta clase fundamenta el repositorio
-class CountriesRepository(
-    private val remoteDataSource: CountriesRemoteDataSource
-) {
+class CountriesRemoteDataSource {
     // Función que recupera el set de países al completo
-    suspend fun fetchAllCountries(): List<Country> = remoteDataSource.fetchAllCountries()
-        /*CountriesClient
+    suspend fun fetchAllCountries(): List<Country> =
+        CountriesClient
             // instancia un objeto CountriesClient para así...
             .instance
             // realizar esta petición concreta a la API que recoge el objeto
@@ -20,10 +19,10 @@ class CountriesRepository(
             .data
             // llamando a la función que realiza el mapeo
             // al tipo Country de cada pais contenido
-            .map { it.toDomainModel() }*/
+            .map { it.toDomainModel() }
     // Función que busca un set de países por continente
-    suspend fun fetchCountriesByCont(continent: String): List<Country> = remoteDataSource.fetchCountriesByCont(continent)
-        /*CountriesClient
+    suspend fun fetchCountriesByCont(continent: String): List<Country> =
+        CountriesClient
             // instancia un objeto CountriesClient para así...
             .instance
             // realizar esta petición concreta a la API que recoge el objeto
@@ -35,10 +34,10 @@ class CountriesRepository(
             .data
             // llamando a la función que realiza el mapeo
             // al tipo Country de cada pais contenido
-            .map { it.toDomainModel() }*/
+            .map { it.toDomainModel() }
     // Función que busca un pais concreto
-    suspend fun findCountryByName(name: String): Country = remoteDataSource.findCountryByName(name)
-        /*CountriesClient
+    suspend fun findCountryByName(name: String): Country =
+        CountriesClient
             // instancia un objeto CountriesClient para así...
             .instance
             // realizar esta petición concreta a la API que recoge el objeto
@@ -50,12 +49,12 @@ class CountriesRepository(
             // recogidos en sendos CountryResponse
             .data
             // llama a la función que realiza el mapeo al tipo Country
-            .toDomainModel()*/
+            .toDomainModel()
 }
 
 // Con esta función de extensión se realiza el mapeo de datos
 // de la API a la dataclass de tipo Country
-/*private fun CountryResponse.toDomainModel(): Country =
+private fun CountryResponse.toDomainModel(): Country =
     Country(
         ccode = code ?: "",
         cname = name ?: "",
@@ -70,4 +69,3 @@ class CountriesRepository(
         cdeaths = covid19?.deaths ?: "",
         ccovupdated = covid19?.lastdate ?: "",
     )
-*/
