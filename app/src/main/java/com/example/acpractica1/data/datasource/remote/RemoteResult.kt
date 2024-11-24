@@ -1,4 +1,4 @@
-package com.example.acpractica1.data
+package com.example.acpractica1.data.datasource.remote
 // Importante: generar, a partir del resultado JSON que devuelve CADA consulta
 // a la API (con Gemini o plugin), las data classes siguientes respetando
 // TODOS los campos aunque luego no se usen todos.

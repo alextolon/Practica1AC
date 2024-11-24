@@ -1,8 +1,8 @@
 package com.example.acpractica1.data.datasource
 
-import com.example.acpractica1.data.CountriesClient
+import com.example.acpractica1.data.datasource.remote.CountriesClient
 import com.example.acpractica1.data.Country
-import com.example.acpractica1.data.CountryResponse
+import com.example.acpractica1.data.datasource.remote.CountryResponse
 
 class CountriesRemoteDataSource {
     // Función que recupera el set de países al completo
