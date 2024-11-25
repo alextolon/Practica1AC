@@ -12,4 +12,6 @@ class CountriesLocalDataSource(private val countriesDao: CountriesDao) {
     suspend fun findCountryByName(name: String) = countriesDao.findCountryByName(name)
 
     suspend fun saveCountries(countries: List<Country>) = countriesDao.saveCountries(countries)
+
+    suspend fun isEmpty() = countriesDao.countCountries() == 0
 }

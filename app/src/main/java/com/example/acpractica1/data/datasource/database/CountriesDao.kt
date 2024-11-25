@@ -13,11 +13,15 @@ interface CountriesDao {
     suspend fun fetchAllCountries(): List<Country>
 
     @Query("SELECT * FROM Country WHERE cname = :cname")
-    suspend fun findCountryByName(cname: String): Country
+    suspend fun findCountryByName(cname: String): Country?
 
     @Query("SELECT * FROM Country WHERE ccontinent = :ccontinent")
     suspend fun fetchCountriesByCont(ccontinent: String): List<Country>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveCountries(countries: List<Country>)
+
+    @Query("SELECT COUNT(*) FROM Country")
+    suspend fun countCountries(): Int
+
 }

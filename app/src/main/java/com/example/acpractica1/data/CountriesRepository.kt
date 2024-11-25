@@ -1,13 +1,21 @@
 package com.example.acpractica1.data
 
+import com.example.acpractica1.data.datasource.CountriesLocalDataSource
 import com.example.acpractica1.data.datasource.CountriesRemoteDataSource
 
 // Esta clase fundamenta el repositorio
 class CountriesRepository(
+    private val localDataSource: CountriesLocalDataSource,
     private val remoteDataSource: CountriesRemoteDataSource
 ) {
     // Función que recupera el set de países al completo
-    suspend fun fetchAllCountries(): List<Country> = remoteDataSource.fetchAllCountries()
+    suspend fun fetchAllCountries(): List<Country> {
+        if(localDataSource.isEmpty()) {
+            val countries = remoteDataSource.fetchAllCountries()
+            localDataSource.saveCountries(countries)
+        }
+        return localDataSource.fetchAllCountries()
+    }
         /*CountriesClient
             // instancia un objeto CountriesClient para así...
             .instance
@@ -22,7 +30,13 @@ class CountriesRepository(
             // al tipo Country de cada pais contenido
             .map { it.toDomainModel() }*/
     // Función que busca un set de países por continente
-    suspend fun fetchCountriesByCont(continent: String): List<Country> = remoteDataSource.fetchCountriesByCont(continent)
+    suspend fun fetchCountriesByCont(continent: String): List<Country> {
+        if(localDataSource.isEmpty()) {
+            val countries = remoteDataSource.fetchCountriesByCont(continent)
+            localDataSource.saveCountries(countries)
+        }
+        return localDataSource.fetchCountriesByCont(continent)
+    }
         /*CountriesClient
             // instancia un objeto CountriesClient para así...
             .instance
@@ -37,7 +51,13 @@ class CountriesRepository(
             // al tipo Country de cada pais contenido
             .map { it.toDomainModel() }*/
     // Función que busca un pais concreto
-    suspend fun findCountryByName(name: String): Country = remoteDataSource.findCountryByName(name)
+    suspend fun findCountryByName(name: String): Country {
+        if(localDataSource.findCountryByName(name) == null) {
+                val countries = remoteDataSource.findCountryByName(name)
+                localDataSource.saveCountries(listOf(countries))
+            }
+            return checkNotNull(localDataSource.findCountryByName(name))
+    }
         /*CountriesClient
             // instancia un objeto CountriesClient para así...
             .instance
