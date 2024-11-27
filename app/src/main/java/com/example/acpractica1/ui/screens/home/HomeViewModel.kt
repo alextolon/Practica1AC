@@ -26,26 +26,28 @@ class HomeViewModel(
     fun onUiReady() {
         viewModelScope.launch {
             _state.value = UiState(loading = true)
-            _state.value = UiState(
-                loading = false,
-                countries = repository.fetchAllCountries()
-            )
+            repository.countries.collect { countries ->
+                _state.value = UiState(loading = false, countries = countries)
+                }
         }
     }
 
     fun onMenuSelected(optSelected: String) {
         viewModelScope.launch {
             _state.value = UiState(loading = true)
-            _state.value = UiState(
-                loading = false,
-                countries =
-                when (optSelected) {
-                    "All(asc)" -> repository.fetchAllCountries()
-                    "All(desc)" -> repository.fetchAllCountries()
-                        .sortedByDescending { it.cname }
-                    else -> repository.fetchCountriesByCont(optSelected)
-                }
-            )
+            repository.fetchCountriesByCont(optSelected).collect { countries ->
+                _state.value = UiState(
+                    loading = false,
+                    countries =
+                    when (optSelected) {
+                        "All(asc)" -> countries
+                        "All(desc)" -> countries
+                            .sortedByDescending { it.cname }
+                        else -> countries
+                    }
+                )
+            }
+
         }
     }
 

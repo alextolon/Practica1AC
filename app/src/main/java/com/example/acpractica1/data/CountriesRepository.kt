@@ -2,20 +2,30 @@ package com.example.acpractica1.data
 
 import com.example.acpractica1.data.datasource.CountriesLocalDataSource
 import com.example.acpractica1.data.datasource.CountriesRemoteDataSource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.transform
 
 // Esta clase fundamenta el repositorio
 class CountriesRepository(
     private val localDataSource: CountriesLocalDataSource,
     private val remoteDataSource: CountriesRemoteDataSource
 ) {
-    // Función que recupera el set de países al completo
-    suspend fun fetchAllCountries(): List<Country> {
+    // Función que recupera el set de países al completo de la BD que, si estuviera
+    // vacía tiraría de la API y rellenaría la BD
+    val countries : Flow<List<Country>> = localDataSource.countries.transform { localCountries ->
+        val countries = localCountries.takeIf { it.isNotEmpty() }
+            ?: remoteDataSource.fetchAllCountries().also {
+                localDataSource.saveCountries(it)
+            }
+        emit(countries)
+    }
+    /*suspend fun fetchAllCountries(): Flow<List<Country>> {
         if(localDataSource.isEmpty()) {
             val countries = remoteDataSource.fetchAllCountries()
             localDataSource.saveCountries(countries)
         }
         return localDataSource.fetchAllCountries()
-    }
+    }*/
         /*CountriesClient
             // instancia un objeto CountriesClient para así...
             .instance
@@ -30,13 +40,21 @@ class CountriesRepository(
             // al tipo Country de cada pais contenido
             .map { it.toDomainModel() }*/
     // Función que busca un set de países por continente
-    suspend fun fetchCountriesByCont(continent: String): List<Country> {
+
+    fun fetchCountriesByCont(continent: String): Flow<List<Country>> = localDataSource.fetchCountriesByCont(continent).transform { localCountries ->
+        val countriesCont = localCountries.takeIf { it.isNotEmpty() }
+            ?: remoteDataSource.fetchCountriesByCont(continent).also {
+                localDataSource.saveCountries(it)
+            }
+        emit(countriesCont)
+    }
+    /*suspend fun fetchCountriesByCont(continent: String): List<Country> {
         if(localDataSource.isEmpty()) {
             val countries = remoteDataSource.fetchCountriesByCont(continent)
             localDataSource.saveCountries(countries)
         }
         return localDataSource.fetchCountriesByCont(continent)
-    }
+    }*/
         /*CountriesClient
             // instancia un objeto CountriesClient para así...
             .instance
@@ -51,13 +69,16 @@ class CountriesRepository(
             // al tipo Country de cada pais contenido
             .map { it.toDomainModel() }*/
     // Función que busca un pais concreto
-    suspend fun findCountryByName(name: String): Country {
-        if(localDataSource.findCountryByName(name) == null) {
-                val countries = remoteDataSource.findCountryByName(name)
-                localDataSource.saveCountries(listOf(countries))
+    fun findCountryByName(name: String): Flow<Country?> = localDataSource.findCountryByName(name).transform { localCountry ->
+        val country = localCountry
+            ?: remoteDataSource.findCountryByName(name).also {
+                localDataSource.saveCountries(listOf(it))
             }
-            return checkNotNull(localDataSource.findCountryByName(name))
+        emit(country)
     }
+
+
+
         /*CountriesClient
             // instancia un objeto CountriesClient para así...
             .instance

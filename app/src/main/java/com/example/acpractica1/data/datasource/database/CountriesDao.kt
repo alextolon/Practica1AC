@@ -5,18 +5,19 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.acpractica1.data.Country
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CountriesDao {
 
     @Query("SELECT * FROM Country")
-    suspend fun fetchAllCountries(): List<Country>
+    fun fetchAllCountries(): Flow<List<Country>>
 
     @Query("SELECT * FROM Country WHERE cname = :cname")
-    suspend fun findCountryByName(cname: String): Country?
+    fun findCountryByName(cname: String): Flow<Country?>
 
     @Query("SELECT * FROM Country WHERE ccontinent = :ccontinent")
-    suspend fun fetchCountriesByCont(ccontinent: String): List<Country>
+    fun fetchCountriesByCont(ccontinent: String): Flow<List<Country>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveCountries(countries: List<Country>)
