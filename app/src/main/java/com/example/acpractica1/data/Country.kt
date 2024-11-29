@@ -19,5 +19,6 @@ data class Country(
     val ccurrency: String,
     val ccases: String,
     val cdeaths: String,
-    val ccovupdated: String
+    val ccovupdated: String,
+    val gaymable: Boolean
 )

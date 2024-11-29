@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -69,10 +70,10 @@ fun DetailScreen(vm: DetailViewModel, onBack: () -> Unit) {
     // y poder llamarlo de una manera más simple
     val state by vm.state.collectAsState()
     val detailState = rememberDetailState()
-    detailState.MuesnackMensEffect(mensnack = state.mesnack) {
+    /*detailState.MuesnackMensEffect(mensnack = state.mesnack) {
         //vm.onMuestraMens()
         vm.onAction(DetailAction.MuestraMens)
-    }
+    }*/
 
     Screen { // Objeto Compose para construir la pantalla
         Scaffold(
@@ -109,17 +110,19 @@ fun DetailScreen(vm: DetailViewModel, onBack: () -> Unit) {
                 )
             },
             floatingActionButton = {
+                val gaymable = state.country?.gaymable ?: false
                 ExtendedFloatingActionButton(onClick = { vm.onAction(DetailAction.FriendlyClick) },
                     containerColor = GreyBack) {
                     Icon(
-                        imageVector = Icons.Default.FavoriteBorder,
-                        contentDescription = "Friendly Country",
-                        modifier = Modifier.size(26.dp)
+                        modifier = Modifier.size(26.dp),
+                        imageVector = if(gaymable) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                        contentDescription = "Friendly Gay Country",
+                        tint = if(gaymable) PinkBack else Color.Black
                     )
-                    Text(text = "  Amable", fontSize = 20.sp)
+                    Text(text = "  Gaymable", fontSize = 20.sp)
                 }
             },
-            snackbarHost = { SnackbarHost(hostState = detailState.snackbarHostState) },
+            //snackbarHost = { SnackbarHost(hostState = detailState.snackbarHostState) },
             // Para asegurar que al rotar el dispositivo pueda hacer scroll
             modifier = Modifier.nestedScroll(detailState.scrollBehavior.nestedScrollConnection)
         ) { padding ->

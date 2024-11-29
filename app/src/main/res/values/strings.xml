@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Lista de Países</string>
     <string name="back">Go Back</string>
+    <string name="etiqnombre">Nombre:</string>
+    <string name="etiqcapital">Capital:</string>
+    <string name="etiqcontinente">Continente:</string>
 </resources>

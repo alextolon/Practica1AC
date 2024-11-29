@@ -68,4 +68,5 @@ private fun CountryResponse.toDomainModel(): Country =
         ccases = covid19?.cases ?: "",
         cdeaths = covid19?.deaths ?: "",
         ccovupdated = covid19?.lastdate ?: "",
+        gaymable = false
     )

@@ -26,9 +26,10 @@ class HomeViewModel(
     fun onUiReady() {
         viewModelScope.launch {
             _state.value = UiState(loading = true)
+            // Recolecta datos y con ellos modifica el estado
             repository.countries.collect { countries ->
                 _state.value = UiState(loading = false, countries = countries)
-                }
+            }
         }
     }
 

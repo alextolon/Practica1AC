@@ -77,21 +77,24 @@ class CountriesRepository(
         emit(country)
     }
 
+    suspend fun cambiaFriendly(country: Country) {
+        localDataSource.saveCountries(listOf(country.copy(gaymable = !country.gaymable)))
+    }
 
 
-        /*CountriesClient
-            // instancia un objeto CountriesClient para así...
-            .instance
-            // realizar esta petición concreta a la API que recoge el objeto
-            // CountryDataResponse devuelto por la API contiene una lista JSON
-            // de países que presenta su elemento raiz "data"
-            .findCountryByName(name)
-            // por eso hay que referirse ahora a "data" de manera que se
-            // pueda entrar al detalle de los datos que contiene viniendo
-            // recogidos en sendos CountryResponse
-            .data
-            // llama a la función que realiza el mapeo al tipo Country
-            .toDomainModel()*/
+    /*CountriesClient
+        // instancia un objeto CountriesClient para así...
+        .instance
+        // realizar esta petición concreta a la API que recoge el objeto
+        // CountryDataResponse devuelto por la API contiene una lista JSON
+        // de países que presenta su elemento raiz "data"
+        .findCountryByName(name)
+        // por eso hay que referirse ahora a "data" de manera que se
+        // pueda entrar al detalle de los datos que contiene viniendo
+        // recogidos en sendos CountryResponse
+        .data
+        // llama a la función que realiza el mapeo al tipo Country
+        .toDomainModel()*/
 }
 
 // Con esta función de extensión se realiza el mapeo de datos

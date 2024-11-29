@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 sealed interface DetailAction {
     data object FriendlyClick: DetailAction
-    data object MuestraMens: DetailAction
+    //data object MuestraMens: DetailAction
 }
 
 class DetailViewModel(
@@ -30,7 +30,7 @@ class DetailViewModel(
     data class UiState(
         val loading: Boolean = false,
         val country: Country? = null,
-        val mesnack: String? = null
+        //val mesnack: String? = null
     )
 
     // Para la generación de un channel hace falta un evento propio de UI
@@ -46,6 +46,7 @@ class DetailViewModel(
     init {
         viewModelScope.launch {
             _state.value = UiState(loading = true)
+            // Recolecta datos y con ellos modifica el estado
             repository.findCountryByName(name).collect { country ->
                 _state.value = UiState(loading = false, country = country)
             }
@@ -56,16 +57,22 @@ class DetailViewModel(
     fun onAction(action: DetailAction) {
         when(action) {
             is DetailAction.FriendlyClick -> onFriendlyClick()
-            is DetailAction.MuestraMens -> onMuestraMens()
+            //is DetailAction.MuestraMens -> onMuestraMens()
         }
     }
 
     private fun onFriendlyClick() {
         //_events.trySend(UIEvent.MuestraMensaje("País aceptable"))
-        _state.update { it.copy(mesnack = "País aceptable") }
+        //_state.update { it.copy(mesnack = "País aceptable") }
+        // Ahora cambiar esto
+        state.value.country?.let {
+            viewModelScope.launch {
+                repository.cambiaFriendly(it)
+            }
+        }
     }
 
-    private fun onMuestraMens() {
+    /*private fun onMuestraMens() {
         _state.update { it.copy(mesnack = null) }
-    }
+    }*/
 }

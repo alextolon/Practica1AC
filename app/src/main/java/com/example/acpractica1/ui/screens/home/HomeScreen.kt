@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.CircularProgressIndicator
@@ -56,6 +57,7 @@ import coil.compose.AsyncImage
 import com.example.acpractica1.ui.theme.ACPractica1Theme
 import com.example.acpractica1.data.Country
 import com.example.acpractica1.R
+import com.example.acpractica1.ui.theme.PinkBack
 import kotlinx.coroutines.launch
 
 @Composable
@@ -213,15 +215,28 @@ fun CountryItem(country: Country, onClick: () -> Unit) {
             .clickable(onClick = onClick),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        AsyncImage(
-            model = country.cflag,
-            contentDescription = null,
-            modifier = Modifier
-                .size(100.dp)
-                .padding(4.dp)
-                .clip(CircleShape),
-            contentScale = ContentScale.Crop,
-        )
+        Box {
+            AsyncImage(
+                model = country.cflag,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(100.dp)
+                    .padding(4.dp)
+                    .clip(CircleShape),
+                contentScale = ContentScale.Crop,
+            )
+            if(country.gaymable) {
+                Icon(
+                    imageVector = Icons.Default.Favorite,
+                    contentDescription = null,
+                    tint = PinkBack,
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .align(Alignment.BottomStart)
+                )
+            }
+        }
+
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceEvenly
@@ -232,7 +247,7 @@ fun CountryItem(country: Country, onClick: () -> Unit) {
                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Nombre:",
+                    text = stringResource(R.string.etiqnombre),
                     style = MaterialTheme.typography.bodyLarge,
                     fontSize = 22.sp,
                     maxLines = 1,
@@ -255,7 +270,7 @@ fun CountryItem(country: Country, onClick: () -> Unit) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Capital:",
+                    text = stringResource(R.string.etiqcapital),
                     style = MaterialTheme.typography.bodyLarge,
                     fontSize = 20.sp,
                     maxLines = 1,
@@ -278,7 +293,7 @@ fun CountryItem(country: Country, onClick: () -> Unit) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Continente:",
+                    text = stringResource(R.string.etiqcontinente),
                     style = MaterialTheme.typography.bodyLarge,
                     fontSize = 18.sp,
                     maxLines = 1,
