@@ -57,6 +57,8 @@ import coil.compose.AsyncImage
 import com.example.acpractica1.ui.theme.ACPractica1Theme
 import com.example.acpractica1.data.Country
 import com.example.acpractica1.R
+import com.example.acpractica1.ui.theme.GreenTAB
+import com.example.acpractica1.ui.theme.Pink60
 import com.example.acpractica1.ui.theme.PinkBack
 import kotlinx.coroutines.launch
 
@@ -92,7 +94,7 @@ fun HomeScreen(
             topBar = {
                 TopAppBar(
                     colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                        containerColor = Color(0xFF03583f),
+                        containerColor = GreenTAB,
                         //MaterialTheme.colorScheme.primaryContainer,
                         titleContentColor = MaterialTheme.colorScheme.primary,
                     ),
@@ -229,10 +231,11 @@ fun CountryItem(country: Country, onClick: () -> Unit) {
                 Icon(
                     imageVector = Icons.Default.Favorite,
                     contentDescription = null,
-                    tint = PinkBack,
+                    tint = Pink60,
                     modifier = Modifier
                         .padding(8.dp)
                         .align(Alignment.BottomStart)
+                        .size(32.dp)
                 )
             }
         }

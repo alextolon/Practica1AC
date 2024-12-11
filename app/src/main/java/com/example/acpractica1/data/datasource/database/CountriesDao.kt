@@ -22,7 +22,9 @@ interface CountriesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveCountries(countries: List<Country>)
 
+    @Query("UPDATE Country SET gaymable = :gaymable WHERE cname = :cname")
+    suspend fun updateGaymable(cname: String, gaymable: Boolean)
+
     @Query("SELECT COUNT(*) FROM Country")
     suspend fun countCountries(): Int
-
 }

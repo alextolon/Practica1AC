@@ -5,9 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.acpractica1.data.CountriesRepository
 import com.example.acpractica1.data.Country
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 sealed interface DetailAction {
@@ -26,6 +28,13 @@ class DetailViewModel(
     // Property que recoge el estado de la UI
     private val _state = MutableStateFlow(UiState())
     val state: StateFlow<UiState> get() = _state.asStateFlow()
+    /*val state: StateFlow<UiState> = repository.findCountryByName(name)
+        .map { country -> UiState(country = country) }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = UiState(loading = true)
+        )*/
     // Data class para almacenar los datos del estado
     data class UiState(
         val loading: Boolean = false,

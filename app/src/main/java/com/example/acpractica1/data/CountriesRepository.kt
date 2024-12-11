@@ -78,8 +78,15 @@ class CountriesRepository(
     }
 
     suspend fun cambiaFriendly(country: Country) {
-        localDataSource.saveCountries(listOf(country.copy(gaymable = !country.gaymable)))
+        localDataSource.updateGaymable(country)
     }
+
+    /*suspend fun cambiaFriendly(country: Country) {
+        //countries. Hasta aquí bien
+        val prueba = listOf(country.copy(gaymable = !country.gaymable))
+        // El fallo debe estar aquí
+        localDataSource.saveCountries(prueba)
+    }*/
 
 
     /*CountriesClient

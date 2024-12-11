@@ -13,5 +13,7 @@ class CountriesLocalDataSource(private val countriesDao: CountriesDao) {
 
     suspend fun saveCountries(countries: List<Country>) = countriesDao.saveCountries(countries)
 
+    suspend fun updateGaymable(country: Country) = countriesDao.updateGaymable(country.cname, !country.gaymable)
+
     suspend fun isEmpty() = countriesDao.countCountries() == 0
 }
