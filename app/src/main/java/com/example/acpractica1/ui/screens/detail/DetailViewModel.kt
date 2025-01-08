@@ -18,7 +18,7 @@ sealed interface DetailAction {
 }
 
 class DetailViewModel(
-    private val name: String,
+    name: String,
     // Property en la que se instancia un objeto de tipo CountriesRepository
     private val repository: CountriesRepository
 ) : ViewModel() {
@@ -26,15 +26,15 @@ class DetailViewModel(
 
     //private val repository: CountriesRepository = CountriesRepository()
     // Property que recoge el estado de la UI
-    private val _state = MutableStateFlow(UiState())
-    val state: StateFlow<UiState> get() = _state.asStateFlow()
-    /*val state: StateFlow<UiState> = repository.findCountryByName(name)
+    //private val _state = MutableStateFlow(UiState())
+    //val state: StateFlow<UiState> get() = _state.asStateFlow()
+    val state: StateFlow<UiState> = repository.findCountryByName(name)
         .map { country -> UiState(country = country) }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = UiState(loading = true)
-        )*/
+        )
     // Data class para almacenar los datos del estado
     data class UiState(
         val loading: Boolean = false,
@@ -52,7 +52,7 @@ class DetailViewModel(
 
     // Constructor que establece los valores del estado
     // al tirar del viewModel de la pantalla de detalle
-    init {
+    /*init {
         viewModelScope.launch {
             _state.value = UiState(loading = true)
             // Recolecta datos y con ellos modifica el estado
@@ -61,7 +61,7 @@ class DetailViewModel(
             }
 
         }
-    }
+    }*/
 
     fun onAction(action: DetailAction) {
         when(action) {

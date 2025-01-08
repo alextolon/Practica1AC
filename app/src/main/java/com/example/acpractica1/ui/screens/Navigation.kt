@@ -52,7 +52,8 @@ fun Navigation() {
         composable(NavScreen.Detail.route,
             arguments = listOf(
                 navArgument(
-                    NavArgs.CountryName.key)
+                    NavArgs.CountryName.key
+                )
                 { type = NavType.StringType }
             )
         ) { backStackEntry ->
