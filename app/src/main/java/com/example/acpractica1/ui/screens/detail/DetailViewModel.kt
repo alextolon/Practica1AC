@@ -2,25 +2,25 @@ package com.example.acpractica1.ui.screens.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.acpractica1.data.CountriesRepository
 import com.example.acpractica1.data.Country
-import kotlinx.coroutines.flow.MutableStateFlow
+import com.example.acpractica1.usecases.CambiaFriendlyUseCase
+import com.example.acpractica1.usecases.FindCountryByNameUseCase
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 sealed interface DetailAction {
     data object FriendlyClick: DetailAction
-    //data object MuestraMens: DetailAction
 }
 
 class DetailViewModel(
     name: String,
-    // Property en la que se instancia un objeto de tipo CountriesRepository
-    private val repository: CountriesRepository
+    // Property en la que se instanciaba un objeto de tipo CountriesRepository
+    // sustituida por useCase para cada acción correspondiente
+    findCountryByNameUseCase: FindCountryByNameUseCase,
+    private val cambiaFriendlyUseCase: CambiaFriendlyUseCase
 ) : ViewModel() {
 
 
@@ -28,7 +28,7 @@ class DetailViewModel(
     // Property que recoge el estado de la UI
     //private val _state = MutableStateFlow(UiState())
     //val state: StateFlow<UiState> get() = _state.asStateFlow()
-    val state: StateFlow<UiState> = repository.findCountryByName(name)
+    val state: StateFlow<UiState> = findCountryByNameUseCase(name)
         .map { country -> UiState(country = country) }
         .stateIn(
             scope = viewModelScope,
@@ -42,27 +42,6 @@ class DetailViewModel(
         //val mesnack: String? = null
     )
 
-    // Para la generación de un channel hace falta un evento propio de UI
-    /*sealed interface UIEvent {
-        data class MuestraMensaje(val mensaje: String) : UIEvent
-    }*/
-
-    /*private val _events = Channel<UIEvent>()
-    val events: Flow<UIEvent> = _events.receiveAsFlow()*/
-
-    // Constructor que establece los valores del estado
-    // al tirar del viewModel de la pantalla de detalle
-    /*init {
-        viewModelScope.launch {
-            _state.value = UiState(loading = true)
-            // Recolecta datos y con ellos modifica el estado
-            repository.findCountryByName(name).collect { country ->
-                _state.value = UiState(loading = false, country = country)
-            }
-
-        }
-    }*/
-
     fun onAction(action: DetailAction) {
         when(action) {
             is DetailAction.FriendlyClick -> onFriendlyClick()
@@ -71,17 +50,11 @@ class DetailViewModel(
     }
 
     private fun onFriendlyClick() {
-        //_events.trySend(UIEvent.MuestraMensaje("País aceptable"))
-        //_state.update { it.copy(mesnack = "País aceptable") }
         // Ahora cambiar esto
         state.value.country?.let {
             viewModelScope.launch {
-                repository.cambiaFriendly(it)
+                cambiaFriendlyUseCase(it)
             }
         }
     }
-
-    /*private fun onMuestraMens() {
-        _state.update { it.copy(mesnack = null) }
-    }*/
 }

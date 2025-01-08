@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.acpractica1.data.Country
 import com.example.acpractica1.data.CountriesRepository
+import com.example.acpractica1.usecases.FetchAllCountriesUseCase
+import com.example.acpractica1.usecases.FetchCountriesByContUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -19,8 +21,11 @@ import kotlinx.coroutines.launch
 // Forma de generar viewmodel heredando de ViewModel
 class HomeViewModel(
     // Property que enlaza objeto de tipo CountriesRepository
-    // que contiene los métodos fecthAllCountries() y fetchCountriesByCont()
-    private val repository: CountriesRepository
+    // que contenía los métodos fecthAllCountries() y fetchCountriesByCont()
+    // convertida en dos useCases (uno por acción del usuario)
+    //private val repository: CountriesRepository
+    private val fetchAllCountriesUseCase: FetchAllCountriesUseCase,
+    private val fetchCountriesByContUseCase: FetchCountriesByContUseCase
 ) : ViewModel() {
     private val uiReady = MutableStateFlow(false)
     // Lo mismo para continentes
@@ -33,8 +38,8 @@ class HomeViewModel(
     val state: StateFlow<UiState> = uiReady
         // Con esto aguanta hasta que la UI está lista (uiReady a true)
         .filter { it }
-        // Ahora ya tira de los países del repositorio
-        .flatMapLatest { repository.countries  }
+        // Ahora ya tira de los países del useCase que le corresponde
+        .flatMapLatest { fetchAllCountriesUseCase() }
         // convirtiéndolo en componente UIState
         .map { UiState(countries = it) }
         // para finalmente convertir el Flow en un StateFlow
@@ -73,7 +78,7 @@ class HomeViewModel(
     fun onMenuSelected(optSelected: String) {
         viewModelScope.launch {
             _state.value = UiState(loading = true)
-            repository.fetchCountriesByCont(optSelected).collect { countries ->
+            fetchCountriesByContUseCase(optSelected).collect { countries ->
                 _state.value = UiState(
                     loading = false,
                     countries =
