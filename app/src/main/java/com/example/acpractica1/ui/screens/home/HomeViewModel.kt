@@ -3,15 +3,14 @@ package com.example.acpractica1.ui.screens.home
 // Architecture components (lifecycle)
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.acpractica1.data.Country
-import com.example.acpractica1.data.CountriesRepository
+import com.example.acpractica1.data.datasource.database.DbCountry
+import com.example.acpractica1.domain.Country
 import com.example.acpractica1.usecases.FetchAllCountriesUseCase
 import com.example.acpractica1.usecases.FetchCountriesByContUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map

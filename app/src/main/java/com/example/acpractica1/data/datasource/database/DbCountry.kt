@@ -1,4 +1,4 @@
-package com.example.acpractica1.data
+package com.example.acpractica1.data.datasource.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 // Esta data class define los datos que se van utilizar
 // de entre los que se recogen en un CountryResponse
 @Entity
-data class Country(
+data class DbCountry(
     @PrimaryKey(autoGenerate = false)
     val cname: String,
     val ccode: String,

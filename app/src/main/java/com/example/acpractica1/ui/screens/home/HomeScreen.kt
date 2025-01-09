@@ -52,14 +52,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.acpractica1.ui.theme.ACPractica1Theme
-import com.example.acpractica1.data.Country
+import com.example.acpractica1.data.datasource.database.DbCountry
 import com.example.acpractica1.R
+import com.example.acpractica1.domain.Country
 import com.example.acpractica1.ui.theme.GreenTAB
 import com.example.acpractica1.ui.theme.Pink60
-import com.example.acpractica1.ui.theme.PinkBack
 import kotlinx.coroutines.launch
 
 @Composable

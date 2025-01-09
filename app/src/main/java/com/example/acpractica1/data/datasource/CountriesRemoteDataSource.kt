@@ -1,8 +1,9 @@
 package com.example.acpractica1.data.datasource
 
 import com.example.acpractica1.data.datasource.remote.CountriesClient
-import com.example.acpractica1.data.Country
+import com.example.acpractica1.data.datasource.database.DbCountry
 import com.example.acpractica1.data.datasource.remote.CountryResponse
+import com.example.acpractica1.domain.Country
 
 class CountriesRemoteDataSource {
     // Función que recupera el set de países al completo
@@ -56,8 +57,8 @@ class CountriesRemoteDataSource {
 // de la API a la dataclass de tipo Country
 private fun CountryResponse.toDomainModel(): Country =
     Country(
-        ccode = code ?: "",
         cname = name ?: "",
+        ccode = code ?: "",
         ccapital = capital ?: "",
         ccontinent = continent ?: "",
         cflag = href?.flag ?: "",
