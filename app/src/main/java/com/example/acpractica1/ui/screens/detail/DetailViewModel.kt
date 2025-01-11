@@ -39,14 +39,12 @@ class DetailViewModel(
     // Data class para almacenar los datos del estado
     data class UiState(
         val loading: Boolean = false,
-        val country: Country? = null,
-        //val mesnack: String? = null
+        val country: Country? = null
     )
 
     fun onAction(action: DetailAction) {
         when(action) {
             is DetailAction.FriendlyClick -> onFriendlyClick()
-            //is DetailAction.MuestraMens -> onMuestraMens()
         }
     }
 

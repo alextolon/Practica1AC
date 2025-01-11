@@ -20,7 +20,7 @@ class CountriesLocalDataSource(private val countriesDao: CountriesDao) {
         .map{ it.toDomainDbCountry() }
     )
 
-    suspend fun updateGaymable(country: Country) = countriesDao.updateGaymable(country.cname, !country.gaymable)
+    suspend fun updateGaymable(country: Country) = countriesDao.updateGaymable(country.toDomainDbCountry().cname, !country.toDomainDbCountry().gaymable)
 
     suspend fun isEmpty() = countriesDao.countCountries() == 0
 }
@@ -39,7 +39,7 @@ private fun DbCountry.toDomainCountry(): Country =
         ccases = ccases,
         cdeaths = cdeaths,
         ccovupdated = ccovupdated,
-        gaymable = false
+        gaymable = gaymable
     )
 
     private fun Country.toDomainDbCountry(): DbCountry =
@@ -56,5 +56,5 @@ private fun DbCountry.toDomainCountry(): Country =
             ccases = ccases,
             cdeaths = cdeaths,
             ccovupdated = ccovupdated,
-            gaymable = false
+            gaymable = gaymable
         )
