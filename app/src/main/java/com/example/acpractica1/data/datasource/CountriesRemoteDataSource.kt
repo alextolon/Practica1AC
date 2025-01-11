@@ -2,15 +2,28 @@ package com.example.acpractica1.data.datasource
 
 import com.example.acpractica1.data.datasource.remote.CountriesClient
 import com.example.acpractica1.data.datasource.database.DbCountry
+import com.example.acpractica1.data.datasource.remote.CountriesService
 import com.example.acpractica1.data.datasource.remote.CountryResponse
 import com.example.acpractica1.domain.Country
 
-class CountriesRemoteDataSource {
+interface CountriesRemoteDataSource {
     // Función que recupera el set de países al completo
-    suspend fun fetchAllCountries(): List<Country> =
-        CountriesClient
+    suspend fun fetchAllCountries(): List<Country>
+
+    // Función que busca un set de países por continente
+    suspend fun fetchCountriesByCont(continent: String): List<Country>
+
+    // Función que busca un pais concreto
+    suspend fun findCountryByName(name: String): Country
+}
+
+class CountriesServerDataSource (
+    private val countriesService: CountriesService
+) : CountriesRemoteDataSource {
+    // Función que recupera el set de países al completo
+    override suspend fun fetchAllCountries(): List<Country> =
+        countriesService // ahora como abstracción en forma de interface
             // instancia un objeto CountriesClient para así...
-            .instance
             // realizar esta petición concreta a la API que recoge el objeto
             // CountriesResponse devuelto por la API contiene una lista JSON
             // de países que presenta su elemento raiz "data"
@@ -22,10 +35,9 @@ class CountriesRemoteDataSource {
             // al tipo Country de cada pais contenido
             .map { it.toDomainModel() }
     // Función que busca un set de países por continente
-    suspend fun fetchCountriesByCont(continent: String): List<Country> =
-        CountriesClient
+    override suspend fun fetchCountriesByCont(continent: String): List<Country> =
+        countriesService // ahora como abstracción en forma de interface
             // instancia un objeto CountriesClient para así...
-            .instance
             // realizar esta petición concreta a la API que recoge el objeto
             // CountriesResponse devuelto por la API contiene una lista JSON
             // de países que presenta su elemento raiz "data"
@@ -37,10 +49,9 @@ class CountriesRemoteDataSource {
             // al tipo Country de cada pais contenido
             .map { it.toDomainModel() }
     // Función que busca un pais concreto
-    suspend fun findCountryByName(name: String): Country =
-        CountriesClient
+    override suspend fun findCountryByName(name: String): Country =
+        countriesService // ahora como abstracción en forma de interface
             // instancia un objeto CountriesClient para así...
-            .instance
             // realizar esta petición concreta a la API que recoge el objeto
             // CountryDataResponse devuelto por la API contiene una lista JSON
             // de países que presenta su elemento raiz "data"
