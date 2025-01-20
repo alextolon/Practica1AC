@@ -1,4 +1,4 @@
-package com.example.acpractica1.data.datasource.database
+package com.example.acpractica1.framework.database
 
 import androidx.room.Dao
 import androidx.room.Insert

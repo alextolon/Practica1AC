@@ -1,4 +1,4 @@
-package com.example.acpractica1.data.datasource.remote
+package com.example.acpractica1.framework.remote
 
 import com.example.acpractica1.BuildConfig
 import kotlinx.serialization.json.Json

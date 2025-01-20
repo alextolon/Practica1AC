@@ -2,7 +2,6 @@ package com.example.acpractica1.ui.screens.detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.acpractica1.data.datasource.database.DbCountry
 import com.example.acpractica1.domain.Country
 import com.example.acpractica1.usecases.CambiaFriendlyUseCase
 import com.example.acpractica1.usecases.FindCountryByNameUseCase
@@ -42,6 +41,7 @@ class DetailViewModel(
         val country: Country? = null
     )
 
+    // Función para concentrar las acciones a las que debe estar atento este ViewModel
     fun onAction(action: DetailAction) {
         when(action) {
             is DetailAction.FriendlyClick -> onFriendlyClick()

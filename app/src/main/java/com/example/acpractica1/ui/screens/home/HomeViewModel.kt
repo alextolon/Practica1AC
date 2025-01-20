@@ -7,10 +7,9 @@ import com.example.acpractica1.domain.Country
 import com.example.acpractica1.usecases.FetchAllCountriesUseCase
 import com.example.acpractica1.usecases.FetchCountriesByContUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -25,69 +24,34 @@ class HomeViewModel(
     private val fetchAllCountriesUseCase: FetchAllCountriesUseCase,
     private val fetchCountriesByContUseCase: FetchCountriesByContUseCase
 ) : ViewModel() {
-    private val uiReady = MutableStateFlow(false)
-    // Lo mismo para continentes
-    //private val uiReadyCont = MutableStateFlow("")
-    // Property que mantiene info variable con formato UIState
-    // Sólo puede modificarse desde dentro de esta clase
-    private val _state =  MutableStateFlow(UiState())
-    //val state: StateFlow<UiState> get() = _state.asStateFlow()
+
+    // Flujo que concentra las acciones a las que debe estar atento este ViewModel para la UI
+    private val _uiAction = MutableSharedFlow<UiAction>()
+    //private val _uiAction = MutableStateFlow<UiAction?>(null)
     @OptIn(ExperimentalCoroutinesApi::class)
-    val state: StateFlow<UiState> = uiReady
-        // Con esto aguanta hasta que la UI está lista (uiReady a true)
-        .filter { it }
-        // Ahora ya tira de los países del useCase que le corresponde
-        .flatMapLatest { fetchAllCountriesUseCase() }
-        // convirtiéndolo en componente UIState
-        .map { UiState(countries = it) }
-        // para finalmente convertir el Flow en un StateFlow
-        .stateIn(
+    val state: StateFlow<UiState> = _uiAction
+        .flatMapLatest { action ->
+            when (action) {  // Discrimina en función de la acción solicitada (Totalidad o filtrado)
+                is UiAction.LoadCountries -> fetchAllCountriesUseCase().map { UiState(countries = it) }
+                is UiAction.FilterCountries -> {
+                    when(action.optSelected){
+                        "All(asc)"  -> fetchAllCountriesUseCase().map { UiState(countries = it) }
+                        "All(desc)" -> fetchAllCountriesUseCase().map { it -> UiState(countries = it.sortedByDescending { it.cname }) }
+                        else -> fetchCountriesByContUseCase(action.optSelected).map { UiState(countries = it) }
+                    }
+                }
+                /* null -> TODO() */
+            }
+        }
+        .stateIn(  // Así se convierte a estado
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = UiState(loading = true)
         )
-    /*@OptIn(ExperimentalCoroutinesApi::class)
-    val stateCont: StateFlow<UiState> = uiReady
-        // Con esto selecciona en función del continente)
-        .filter { it }
-        // Ahora ya tira de los países del repositorio
-        .flatMapLatest { repository.fetchCountriesByCont(continent)  }
-        // convirtiéndolo en componente UIState
-        .map { UiState(countries = it) }
-        // para finalmente convertir el Flow en un StateFlow
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = UiState(loading = true)
-        )*/
-    // Simula que primero está cargando (Circulito) y luego  muestra información
-    // Por defecto, muestra todos los países. Si elige continente los de esa elección.
-    fun onUiReady() {
-        uiReady.value = true
-        /*viewModelScope.launch {
-            _state.value = UiState(loading = true)
-            // Recolecta datos y con ellos modifica el estado
-            repository.countries.collect { countries ->
-                _state.value = UiState(loading = false, countries = countries)
-            }
-        }*/
-    }
 
-    fun onMenuSelected(optSelected: String) {
+    fun onUiAction(action: UiAction) {
         viewModelScope.launch {
-            _state.value = UiState(loading = true)
-            fetchCountriesByContUseCase(optSelected).collect { countries ->
-                _state.value = UiState(
-                    loading = false,
-                    countries =
-                    when (optSelected) {
-                        "All(asc)" -> countries
-                        "All(desc)" -> countries
-                            .sortedByDescending { it.cname }
-                        else -> countries
-                    }
-                )
-            }
+            _uiAction.emit(action)
         }
     }
 
@@ -97,4 +61,9 @@ class HomeViewModel(
         val loading: Boolean = false,
         val countries: List<Country> = emptyList()
     )
+
+    sealed class UiAction {
+        data object LoadCountries : UiAction()
+        data class FilterCountries(val optSelected: String) : UiAction()
+    }
 }

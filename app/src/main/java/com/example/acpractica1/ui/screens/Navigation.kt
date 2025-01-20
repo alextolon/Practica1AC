@@ -10,9 +10,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.acpractica1.App
 import com.example.acpractica1.data.CountriesRepository
-import com.example.acpractica1.data.datasource.CountriesRoomDataSource
-import com.example.acpractica1.data.datasource.CountriesServerDataSource
-import com.example.acpractica1.data.datasource.remote.CountriesClient
+import com.example.acpractica1.framework.CountriesRoomDataSource
+import com.example.acpractica1.framework.CountriesServerDataSource
+import com.example.acpractica1.framework.remote.CountriesClient
 import com.example.acpractica1.ui.screens.detail.DetailScreen
 import com.example.acpractica1.ui.screens.detail.DetailViewModel
 import com.example.acpractica1.ui.screens.home.HomeScreen

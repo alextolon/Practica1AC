@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -54,7 +53,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.acpractica1.ui.theme.ACPractica1Theme
-import com.example.acpractica1.data.datasource.database.DbCountry
 import com.example.acpractica1.R
 import com.example.acpractica1.domain.Country
 import com.example.acpractica1.ui.theme.GreenTAB
@@ -84,7 +82,8 @@ fun HomeScreen(
     val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
         coroutineScope.launch {
-            vm.onUiReady()
+            //vm.onUiReady()
+            vm.onUiAction(HomeViewModel.UiAction.LoadCountries)
         }
     }
 
@@ -116,7 +115,8 @@ fun HomeScreen(
                     },
                     actions = {
                         TopAppBarDropdownMenu { continentSelected ->
-                            vm.onMenuSelected(continentSelected)
+                            //vm.onMenuSelected(continentSelected)
+                            vm.onUiAction(HomeViewModel.UiAction.FilterCountries(continentSelected))
                         }
                     },
                     scrollBehavior = homeState.scrollBehavior
