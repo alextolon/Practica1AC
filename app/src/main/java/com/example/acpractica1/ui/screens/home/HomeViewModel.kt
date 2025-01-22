@@ -8,6 +8,7 @@ import com.example.acpractica1.usecases.FetchAllCountriesUseCase
 import com.example.acpractica1.usecases.FetchCountriesByContUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -27,7 +28,6 @@ class HomeViewModel(
 
     // Flujo que concentra las acciones a las que debe estar atento este ViewModel para la UI
     private val _uiAction = MutableSharedFlow<UiAction>()
-    //private val _uiAction = MutableStateFlow<UiAction?>(null)
     @OptIn(ExperimentalCoroutinesApi::class)
     val state: StateFlow<UiState> = _uiAction
         .flatMapLatest { action ->
