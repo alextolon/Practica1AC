@@ -145,6 +145,8 @@ fun HomeScreen(
                 contentPadding = padding //Evita que TopBar coma zona de contenido
             ) {
                 // Aquí generas cada item de lista a partir
+                /*items(state.countries) {
+                    CountryItem(country = it) { onCountryClick(it) }*/
                 items(state.countries) {
                     CountryItem(country = it) { onCountryClick(it) }
                 }

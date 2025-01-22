@@ -79,6 +79,7 @@ dependencies {
     implementation(libs.retrofit.converter.kotlinx.serialization)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.kotlinx.coroutines.core)
     //implementation(libs.androidx.room.compiler)
     ksp(libs.androidx.room.compiler)
     testImplementation(libs.junit)

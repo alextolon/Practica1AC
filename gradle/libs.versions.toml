@@ -16,6 +16,7 @@ roomKtx = "2.6.1"
 # la versión de ksp integra la versión de kotlin utilizada
 ksp = "1.9.23-1.0.20"
 jetbrainsKotlinJvm = "1.9.23"
+coroutines = "1.8.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -40,6 +41,8 @@ retrofit-converter-kotlinx-serialization = { group = "com.squareup.retrofit2", n
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx"}
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomKtx" }
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref ="coroutines" }
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref ="coroutines" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
