@@ -1,19 +1,17 @@
 package com.example.acpractica1.data.datasource
 
-import com.example.acpractica1.data.Country
-import com.example.acpractica1.data.datasource.database.CountriesDao
+import com.example.acpractica1.domain.Country
+import kotlinx.coroutines.flow.Flow
 
-class CountriesLocalDataSource(private val countriesDao: CountriesDao) {
+interface CountriesLocalDataSource {
+    val countries: Flow<List<Country>>
+    fun fetchCountriesByCont(continent: String): Flow<List<Country>>
+    fun findCountryByName(name: String): Flow<Country?>
 
-    val countries = countriesDao.fetchAllCountries()
+    suspend fun saveCountries(countries: List<Country>)
 
-    fun fetchCountriesByCont(continent: String) = countriesDao.fetchCountriesByCont(continent)
+    suspend fun updateGaymable(country: Country)
 
-    fun findCountryByName(name: String) = countriesDao.findCountryByName(name)
-
-    suspend fun saveCountries(countries: List<Country>) = countriesDao.saveCountries(countries)
-
-    suspend fun updateGaymable(country: Country) = countriesDao.updateGaymable(country.cname, !country.gaymable)
-
-    suspend fun isEmpty() = countriesDao.countCountries() == 0
+    suspend fun isEmpty(): Boolean
 }
+

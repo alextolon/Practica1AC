@@ -2,7 +2,7 @@ package com.example.acpractica1
 
 import android.app.Application
 import androidx.room.Room
-import com.example.acpractica1.data.datasource.database.CountriesDatabase
+import com.example.acpractica1.framework.database.CountriesDatabase
 
 // Una forma de tener aparte el inicio de la BD
 class App: Application() {

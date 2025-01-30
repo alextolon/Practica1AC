@@ -1,5 +1,7 @@
 @file:Suppress("UnstableApiUsage")
 
+
+
 pluginManagement {
     repositories {
         google {
@@ -23,3 +25,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "ACPractica1"
 include(":app")
+include(":domain")
+include(":data")
+include(":usecases")

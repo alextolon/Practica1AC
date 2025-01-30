@@ -10,12 +10,17 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.acpractica1.App
 import com.example.acpractica1.data.CountriesRepository
-import com.example.acpractica1.data.datasource.CountriesLocalDataSource
-import com.example.acpractica1.data.datasource.CountriesRemoteDataSource
+import com.example.acpractica1.framework.CountriesRoomDataSource
+import com.example.acpractica1.framework.CountriesServerDataSource
+import com.example.acpractica1.framework.remote.CountriesClient
 import com.example.acpractica1.ui.screens.detail.DetailScreen
 import com.example.acpractica1.ui.screens.detail.DetailViewModel
 import com.example.acpractica1.ui.screens.home.HomeScreen
 import com.example.acpractica1.ui.screens.home.HomeViewModel
+import com.example.acpractica1.usecases.CambiaFriendlyUseCase
+import com.example.acpractica1.usecases.FetchAllCountriesUseCase
+import com.example.acpractica1.usecases.FetchCountriesByContUseCase
+import com.example.acpractica1.usecases.FindCountryByNameUseCase
 
 // Con esto etiquetamos las rutas para no tener que hardcodearlas en el código
 sealed class NavScreen(val route: String) {
@@ -33,8 +38,8 @@ fun Navigation() {
     val navController = rememberNavController()
     val app = LocalContext.current.applicationContext as App
     val countriesRepository = CountriesRepository(
-        localDataSource = CountriesLocalDataSource(app.db.countriesDao()),
-        remoteDataSource = CountriesRemoteDataSource()
+        localDataSource = CountriesRoomDataSource(app.db.countriesDao()),
+        remoteDataSource = CountriesServerDataSource(CountriesClient.instance)
     )
     // Objeto principal que concentra los elementos de navegación
     NavHost(navController = navController , startDestination = NavScreen.Home.route) {
@@ -44,7 +49,7 @@ fun Navigation() {
                 onCountryClick = { country ->
                     navController.navigate(NavScreen.Detail.formaRuta(country.cname))
                 },
-                viewModel { HomeViewModel(countriesRepository) }
+                viewModel { HomeViewModel(FetchAllCountriesUseCase(countriesRepository), FetchCountriesByContUseCase(countriesRepository)) }
             )
         }
 
@@ -59,7 +64,7 @@ fun Navigation() {
         ) { backStackEntry ->
             val countryArgName = requireNotNull(backStackEntry.arguments?.getString(NavArgs.CountryName.key))
             DetailScreen(
-                viewModel { DetailViewModel(countryArgName, countriesRepository) },
+                viewModel { DetailViewModel(countryArgName, FindCountryByNameUseCase(countriesRepository), CambiaFriendlyUseCase(countriesRepository)) },
                 // Gestiona el botón <- para volver a la pantalla que llamó
                 onBack = { navController.popBackStack() })
         }

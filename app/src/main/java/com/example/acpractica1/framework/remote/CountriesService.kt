@@ -1,4 +1,4 @@
-package com.example.acpractica1.data.datasource.remote
+package com.example.acpractica1.framework.remote
 
 import retrofit2.http.GET
 import retrofit2.http.Path
