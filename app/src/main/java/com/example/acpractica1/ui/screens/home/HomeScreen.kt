@@ -1,5 +1,13 @@
 package com.example.acpractica1.ui.screens.home
 
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.content.Intent.makeMainActivity
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.provider.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -22,6 +30,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -32,6 +41,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.LaunchedEffect
@@ -46,6 +56,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -59,6 +70,37 @@ import com.example.acpractica1.domain.Country
 import com.example.acpractica1.ui.theme.GreenTAB
 import com.example.acpractica1.ui.theme.Pink60
 import kotlinx.coroutines.launch
+import kotlin.system.exitProcess
+
+enum class NetworkType{
+    NoDisponible, Wifi, RedMovil, Ethernet
+}
+
+private fun verifConnect(context: Context): NetworkType {
+
+    // Se construye un gestor de conectividad
+    val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+    // Se instancia un objeto para obtener una referencia a la red predeterminada actual
+    val network = connectivityManager.activeNetwork ?: return NetworkType.NoDisponible
+
+    // Ahora se pueden utilizar las "capabilities" de la red activa a partir del objeto anterior
+    val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return NetworkType.NoDisponible
+
+    return when {
+        // Indica que la conectividad va por WiFi
+        activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> NetworkType.Wifi
+
+        // Indica que la conectividad va por redes móviles
+        activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) && activeNetwork.hasTransport(
+            NetworkCapabilities.TRANSPORT_CELLULAR) -> NetworkType.RedMovil
+
+        // Indica que la conectividad va por redes móviles
+        activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> NetworkType.Ethernet
+
+        else -> NetworkType.NoDisponible
+    }
+}
 
 @Composable
 // Función que construye la pantalla principal
@@ -81,11 +123,20 @@ fun HomeScreen(
     val homeState = rememberHomeState()
     // Lanzamiento de la corrutina que vigila los cambios de estado de la UI
     val coroutineScope = rememberCoroutineScope()
-    LaunchedEffect(Unit) {
-        coroutineScope.launch {
-            //vm.onUiReady()
-            vm.onUiAction(HomeViewModel.UiAction.LoadCountries)
+    val activity = (LocalContext.current as Activity)
+    if (verifConnect(activity) != NetworkType.NoDisponible) {
+        LaunchedEffect(Unit) {
+            coroutineScope.launch {
+                //vm.onUiReady()
+                vm.onUiAction(HomeViewModel.UiAction.LoadCountries)
+            }
         }
+    } else {
+        // ConnectDialog composable
+        ConnectDialog(
+            message = "No hay redes disponibles",
+            /*startActivity(enableWifiIntent)*/  //enableWifi(this)
+        )
     }
 
     Screen {
@@ -153,6 +204,52 @@ fun HomeScreen(
         }
     }
 }
+
+@Suppress("DEPRECATION")
+@SuppressLint("ContextCastToActivity")
+@Composable
+private fun ConnectDialog(
+    message: String,
+    modifier: Modifier = Modifier
+) {
+    // Propiedad que permite utilizar el método finish()
+    val activity = (LocalContext.current as Activity)
+
+    AlertDialog(
+        onDismissRequest = {
+            // Dismiss the dialog when the user clicks outside the dialog or on the back
+            // button. If you want to disable that functionality, simply use an empty
+            // onCloseRequest.
+        },
+        title = { Text(text = "¡Atención!") },
+        text = { Text(text = message) },
+        modifier = modifier,
+        dismissButton = {
+            // Botón para cerrar la app
+            TextButton(
+                onClick = {
+                    activity.finish()
+                    exitProcess(0)
+                }
+            ) {
+                Text(text = "Salir")
+            }
+        },
+        confirmButton = {
+            // Botón para habilitar la Wifi
+            TextButton (onClick = {
+                val enableWifiIntent = Intent(Settings.ACTION_WIFI_SETTINGS)
+                //val mIntent = getIntent()
+                //activity.startActivity(enableWifiIntent)
+                // Para que vuelva del menu configuración Wifi
+                //activity.startActivity(makeMainActivity(i))
+            }) {
+                Text(text = "Conecta Wifi")
+            }
+        }
+    )
+}
+
 
 @Composable
 fun TopAppBarDropdownMenu(

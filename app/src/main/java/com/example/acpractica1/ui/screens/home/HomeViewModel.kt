@@ -1,12 +1,16 @@
 package com.example.acpractica1.ui.screens.home
 
 // Architecture components (lifecycle)
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.acpractica1.domain.Country
 import com.example.acpractica1.usecases.FetchAllCountriesUseCase
 import com.example.acpractica1.usecases.FetchCountriesByContUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -27,11 +31,16 @@ class HomeViewModel(
 
     // Flujo que concentra las acciones a las que debe estar atento este ViewModel para la UI
     private val _uiAction = MutableSharedFlow<UiAction>()
+
     @OptIn(ExperimentalCoroutinesApi::class)
     val state: StateFlow<UiState> = _uiAction
         .flatMapLatest { action ->
             when (action) {  // Discrimina en función de la acción solicitada (Totalidad o filtrado)
-                is UiAction.LoadCountries -> fetchAllCountriesUseCase().map { UiState(countries = it) }
+                is UiAction.LoadCountries -> {
+                        fetchAllCountriesUseCase().map { UiState(countries = it) }
+                }
+
+
                 is UiAction.FilterCountries -> {
                     when(action.optSelected){
                         "All(asc)"  -> fetchAllCountriesUseCase().map { UiState(countries = it) }
@@ -58,7 +67,8 @@ class HomeViewModel(
     data class UiState(
         // Para albergar el estado que detecta si la pantalla está cargando
         val loading: Boolean = false,
-        val countries: List<Country> = emptyList()
+        val countries: List<Country> = emptyList(),
+        val netAvailable: Boolean = true
     )
 
     sealed class UiAction {
@@ -66,3 +76,4 @@ class HomeViewModel(
         data class FilterCountries(val optSelected: String) : UiAction()
     }
 }
+
