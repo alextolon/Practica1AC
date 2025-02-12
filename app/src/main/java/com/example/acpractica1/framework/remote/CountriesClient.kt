@@ -7,10 +7,12 @@ import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import retrofit2.create
-
-object CountriesClient {
+// Pinta que hay que convertirla en clase para que reciba por constructor
+// el API KEY del @Provides
+class CountriesClient (private val BTOK: String) {
+//object CountriesClient {
     // Token de autenticación para acceder a la API cogido de local.properties
-    private const val BTOK = BuildConfig.RCDB_API_KEY
+    //private const val BTOK = BuildConfig.RCDB_API_KEY
 
     // Configura el cliente HTTP con un interceptor para agregar el token en cada petición
     private val okHttpClient = okhttp3.OkHttpClient.Builder()

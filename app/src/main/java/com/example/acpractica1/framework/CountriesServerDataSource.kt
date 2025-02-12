@@ -4,8 +4,9 @@ import com.example.acpractica1.data.datasource.CountriesRemoteDataSource
 import com.example.acpractica1.domain.Country
 import com.example.acpractica1.framework.remote.CountriesService
 import com.example.acpractica1.framework.remote.CountryResponse
+import javax.inject.Inject
 
-class CountriesServerDataSource (
+class CountriesServerDataSource @Inject constructor(
     private val countriesService: CountriesService
 ) : CountriesRemoteDataSource {
     // Función que recupera el set de países al completo

@@ -1,4 +1,5 @@
 [versions]
+# Antes 8.5.2
 agp = "8.5.2"
 kotlin = "1.9.23"
 coreKtx = "1.15.0"
@@ -17,6 +18,9 @@ roomKtx = "2.6.1"
 ksp = "1.9.23-1.0.20"
 jetbrainsKotlinJvm = "1.9.23"
 coroutines = "1.8.0"
+# Añadido para Hilt
+hilt = "2.51.1"
+hiltNavigationCompose = "1.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -43,6 +47,11 @@ androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = 
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomKtx" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref ="coroutines" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref ="coroutines" }
+# Para Hilt
+android-hilt-navigation-compose = { group = "android.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose"}
+hilt-core = {group = "com.google.dagger", name = "hilt-core", version.ref = "hilt" }
+hilt-android = {group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-compiler = {group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -50,3 +59,5 @@ jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = 
 kotlinxSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp"}
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
+# Para Hilt
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }

@@ -52,6 +52,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+
 import com.example.acpractica1.R
 import com.example.acpractica1.ui.screens.home.Screen
 import com.example.acpractica1.ui.theme.GreyBack
@@ -64,7 +65,8 @@ import java.util.Locale
 @Composable
 // Esta función construye la pantalla Detail de la aplicación de la mano de un
 // ViewModel que contiene el estado de la pantalla
-fun DetailScreen(vm: DetailViewModel, onBack: () -> Unit) {
+// vm: DetailViewModel = hiltViewModel()
+fun DetailScreen(vm: DetailViewModel = hiltViewModel(), onBack: () -> Unit) {
     // Para no trabajar directamente con el estado que proporciona el ViewModel
     // y poder llamarlo de una manera más simple
     val state by vm.state.collectAsState()

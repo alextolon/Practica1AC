@@ -5,18 +5,23 @@ import androidx.lifecycle.viewModelScope
 import com.example.acpractica1.domain.Country
 import com.example.acpractica1.usecases.CambiaFriendlyUseCase
 import com.example.acpractica1.usecases.FindCountryByNameUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 sealed interface DetailAction {
     data object FriendlyClick: DetailAction
 }
 
-class DetailViewModel(
-    name: String,
+/* Antes class DetailViewModel(
+    name: String,*/
+@HiltViewModel
+class DetailViewModel @Inject constructor(
+    @CountryName name: String,
     // Property en la que se instanciaba un objeto de tipo CountriesRepository
     // sustituida por useCase para cada acción correspondiente
     findCountryByNameUseCase: FindCountryByNameUseCase,

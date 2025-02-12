@@ -1,6 +1,7 @@
 plugins {
     id("java-library")
     alias(libs.plugins.jetbrains.kotlin.jvm)
+
 }
 
 java {
@@ -11,4 +12,9 @@ java {
 dependencies {
     implementation(project(":domain"))
     implementation(libs.kotlinx.coroutines.core)
+    // Para Hilt
+    implementation(libs.android.hilt.navigation.compose)
+    implementation(libs.hilt.core)
+    implementation(libs.hilt.android)
+    implementation(libs.hilt.compiler)
 }

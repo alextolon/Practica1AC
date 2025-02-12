@@ -5,9 +5,12 @@ import com.example.acpractica1.data.datasource.CountriesRemoteDataSource
 import com.example.acpractica1.domain.Country
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.transform
+import javax.inject.Inject
+import javax.inject.Singleton
 
 // Esta clase fundamenta el repositorio
-class CountriesRepository(
+
+class CountriesRepository @Inject constructor(
     private val localDataSource: CountriesLocalDataSource,
     private val remoteDataSource: CountriesRemoteDataSource
 ) {

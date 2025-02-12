@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -82,6 +83,12 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     //implementation(libs.androidx.room.compiler)
     ksp(libs.androidx.room.compiler)
+    // Para Hilt
+    implementation(libs.android.hilt.navigation.compose)
+    implementation(libs.hilt.core)
+    implementation(libs.hilt.android)
+    implementation(libs.hilt.compiler)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

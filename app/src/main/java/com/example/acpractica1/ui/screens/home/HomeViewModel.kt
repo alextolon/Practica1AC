@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.acpractica1.domain.Country
 import com.example.acpractica1.usecases.FetchAllCountriesUseCase
 import com.example.acpractica1.usecases.FetchCountriesByContUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -18,9 +19,11 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@HiltViewModel
 // Forma de generar viewmodel heredando de ViewModel
-class HomeViewModel(
+class HomeViewModel @Inject constructor(
     // Property que enlaza objeto de tipo CountriesRepository
     // que contenía los métodos fecthAllCountries() y fetchCountriesByCont()
     // convertida en dos useCases (uno por acción del usuario)
