@@ -11,7 +11,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 // Suministra la inyección de dependencias del BEARER TOKEN
 object di_appmod {
-
+    // Preparamos la recogida del BearerToken
     @Provides
     @Singleton
     @Named("bearerToken")

@@ -1,5 +1,4 @@
 [versions]
-# Antes 8.5.2
 agp = "8.5.2"
 kotlin = "1.9.23"
 coreKtx = "1.15.0"
@@ -48,7 +47,7 @@ androidx-room-compiler = { group = "androidx.room", name = "room-compiler", vers
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref ="coroutines" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref ="coroutines" }
 # Para Hilt
-android-hilt-navigation-compose = { group = "android.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose"}
+androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose"}
 hilt-core = {group = "com.google.dagger", name = "hilt-core", version.ref = "hilt" }
 hilt-android = {group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = {group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }

@@ -8,10 +8,10 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
-dependencies {
+/*dependencies {
 // Para Hilt
     implementation(libs.android.hilt.navigation.compose)
     implementation(libs.hilt.core)
     implementation(libs.hilt.android)
     implementation(libs.hilt.compiler)
-}
+}*/

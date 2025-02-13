@@ -63,6 +63,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.acpractica1.ui.theme.ACPractica1Theme
 import com.example.acpractica1.R
@@ -118,7 +119,7 @@ fun Screen(content: @Composable () -> Unit) {
 @Composable
 fun HomeScreen(
     onCountryClick: (Country) -> Unit,
-    vm: HomeViewModel = hiltViewModel()
+    vm: HomeViewModel = hiltViewModel<HomeViewModel>()
 ) {
     val homeState = rememberHomeState()
     // Lanzamiento de la corrutina que vigila los cambios de estado de la UI

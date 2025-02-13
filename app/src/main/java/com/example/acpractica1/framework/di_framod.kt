@@ -29,7 +29,7 @@ internal object di_framod {
 
     @Provides
     @Singleton
-    // Da el problema hasta que CountriesClient no se convierta en clase (ahora es Object)
+    // El BearerToken generado (en di_appmod) es utilizado aquí
     fun provideCountriesService(@Named("bearerToken") bearerToken: String): CountriesService = CountriesClient(
         bearerToken
     ).instance

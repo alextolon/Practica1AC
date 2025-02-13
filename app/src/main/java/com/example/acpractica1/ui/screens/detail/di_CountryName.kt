@@ -15,7 +15,7 @@ class DetailViewModelModule {
     @Provides
     @ViewModelScoped
     @CountryName
-    fun provideMovieId(savedStateHandle: SavedStateHandle): String {
+    fun provideCountryName(savedStateHandle: SavedStateHandle): String {
         // Revisar este ""
         return savedStateHandle[NavArgs.CountryName.key] ?: ""
     }

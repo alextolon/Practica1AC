@@ -36,11 +36,11 @@ enum class NavArgs(val key: String) {
 @Composable
 fun Navigation() {
     val navController = rememberNavController()
-    val app = LocalContext.current.applicationContext as App
-    val countriesRepository = CountriesRepository(
+    //val app = LocalContext.current.applicationContext as App
+    /*val countriesRepository = CountriesRepository(
         localDataSource = CountriesRoomDataSource(app.db.countriesDao()),
         remoteDataSource = CountriesServerDataSource(CountriesClient.instance)
-    )
+    )*/
     // Objeto principal que concentra los elementos de navegación
     NavHost(navController = navController , startDestination = NavScreen.Home.route) {
         // Objeto para establecer endpoint interno para pantalla principal
@@ -48,8 +48,9 @@ fun Navigation() {
             HomeScreen(
                 onCountryClick = { country ->
                     navController.navigate(NavScreen.Detail.formaRuta(country.cname))
-                },
-                viewModel { HomeViewModel(FetchAllCountriesUseCase(countriesRepository), FetchCountriesByContUseCase(countriesRepository)) }
+                }//,
+                //viewModel()
+                //{ HomeViewModel(FetchAllCountriesUseCase(countriesRepository), FetchCountriesByContUseCase(countriesRepository)) }
             )
         }
 
@@ -61,10 +62,11 @@ fun Navigation() {
                 )
                 { type = NavType.StringType }
             )
-        ) { backStackEntry ->
-            val countryArgName = requireNotNull(backStackEntry.arguments?.getString(NavArgs.CountryName.key))
+        ) { //backStackEntry ->
+            //val countryArgName = requireNotNull(backStackEntry.arguments?.getString(NavArgs.CountryName.key))
             DetailScreen(
-                viewModel { DetailViewModel(countryArgName, FindCountryByNameUseCase(countriesRepository), CambiaFriendlyUseCase(countriesRepository)) },
+                //{ DetailViewModel(countryArgName, FindCountryByNameUseCase(countriesRepository), CambiaFriendlyUseCase(countriesRepository)) }
+                //viewModel(),
                 // Gestiona el botón <- para volver a la pantalla que llamó
                 onBack = { navController.popBackStack() })
         }

@@ -84,7 +84,7 @@ dependencies {
     //implementation(libs.androidx.room.compiler)
     ksp(libs.androidx.room.compiler)
     // Para Hilt
-    implementation(libs.android.hilt.navigation.compose)
+    implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.hilt.core)
     implementation(libs.hilt.android)
     implementation(libs.hilt.compiler)
