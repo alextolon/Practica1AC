@@ -18,7 +18,7 @@ ksp = "1.9.23-1.0.20"
 jetbrainsKotlinJvm = "1.9.23"
 coroutines = "1.8.0"
 # Añadido para Hilt
-hilt = "2.51.1"
+hilt = "2.50"
 hiltNavigationCompose = "1.2.0"
 
 [libraries]

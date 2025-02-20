@@ -119,7 +119,7 @@ fun Screen(content: @Composable () -> Unit) {
 @Composable
 fun HomeScreen(
     onCountryClick: (Country) -> Unit,
-    vm: HomeViewModel = hiltViewModel<HomeViewModel>()
+    vm: HomeViewModel = hiltViewModel()
 ) {
     val homeState = rememberHomeState()
     // Lanzamiento de la corrutina que vigila los cambios de estado de la UI
