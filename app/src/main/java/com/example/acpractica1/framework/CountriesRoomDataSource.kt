@@ -7,7 +7,8 @@ import com.example.acpractica1.framework.database.DbCountry
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class CountriesRoomDataSource @Inject constructor(private val countriesDao: CountriesDao) : CountriesLocalDataSource {
+class CountriesRoomDataSource @Inject constructor(private val countriesDao: CountriesDao) :
+    CountriesLocalDataSource {
 
     override val countries = countriesDao.fetchAllCountries()
         .map{ lista -> lista.map{ it.toDomainCountry() } }

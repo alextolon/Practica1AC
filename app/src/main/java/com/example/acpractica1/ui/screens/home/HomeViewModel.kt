@@ -1,9 +1,6 @@
 package com.example.acpractica1.ui.screens.home
 
 // Architecture components (lifecycle)
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.acpractica1.domain.Country
@@ -11,7 +8,6 @@ import com.example.acpractica1.usecases.FetchAllCountriesUseCase
 import com.example.acpractica1.usecases.FetchCountriesByContUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

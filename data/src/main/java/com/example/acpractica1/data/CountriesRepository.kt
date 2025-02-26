@@ -1,4 +1,4 @@
-package com.example.acpractica1.data
+package com.example.acpractica1.data.datasource
 
 import com.example.acpractica1.data.datasource.CountriesLocalDataSource
 import com.example.acpractica1.data.datasource.CountriesRemoteDataSource
@@ -6,7 +6,6 @@ import com.example.acpractica1.domain.Country
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.transform
 import javax.inject.Inject
-import javax.inject.Singleton
 
 // Esta clase fundamenta el repositorio
 

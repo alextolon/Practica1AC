@@ -1,26 +1,13 @@
 package com.example.acpractica1.ui.screens
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.acpractica1.App
-import com.example.acpractica1.data.CountriesRepository
-import com.example.acpractica1.framework.CountriesRoomDataSource
-import com.example.acpractica1.framework.CountriesServerDataSource
-import com.example.acpractica1.framework.remote.CountriesClient
 import com.example.acpractica1.ui.screens.detail.DetailScreen
-import com.example.acpractica1.ui.screens.detail.DetailViewModel
 import com.example.acpractica1.ui.screens.home.HomeScreen
-import com.example.acpractica1.ui.screens.home.HomeViewModel
-import com.example.acpractica1.usecases.CambiaFriendlyUseCase
-import com.example.acpractica1.usecases.FetchAllCountriesUseCase
-import com.example.acpractica1.usecases.FetchCountriesByContUseCase
-import com.example.acpractica1.usecases.FindCountryByNameUseCase
 
 // Con esto etiquetamos las rutas para no tener que hardcodearlas en el código
 sealed class NavScreen(val route: String) {
