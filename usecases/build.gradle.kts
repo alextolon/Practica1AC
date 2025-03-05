@@ -13,8 +13,8 @@ dependencies {
     implementation(project(":domain"))
     implementation(libs.kotlinx.coroutines.core)
     // Para Hilt
-    implementation(libs.androidx.hilt.navigation.compose)
+    // No hace falta implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.hilt.core)
-    implementation(libs.hilt.android)
-    implementation(libs.hilt.compiler)
+    //implementation(libs.hilt.android)
+    //implementation(libs.hilt.compiler)
 }
