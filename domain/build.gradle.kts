@@ -15,4 +15,7 @@ dependencies {
     implementation(libs.hilt.core)
     //implementation(libs.hilt.android)
     //implementation(libs.hilt.compiler)
+    testImplementation(libs.junit)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.junit.jupiter)
 }

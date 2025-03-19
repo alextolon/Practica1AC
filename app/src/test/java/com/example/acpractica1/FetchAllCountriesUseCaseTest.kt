@@ -2,25 +2,13 @@ package com.example.acpractica1
 
 import com.example.acpractica1.usecases.FetchAllCountriesUseCase
 import kotlinx.coroutines.flow.flowOf
-import org.junit.Test
-
-import org.junit.Assert.*
-import org.junit.jupiter.api.Assertions
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
 
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
-class ExampleUnitTest {
+class FetchAllCountriesUseCaseTest {
     @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
-    }
-
-    @org.junit.jupiter.api.Test
     fun `Invoke calls repository`() {
         // Given / Arrange
         // sampleCountries se coge de un helper que simula la recepción de un país
@@ -33,6 +21,6 @@ class ExampleUnitTest {
         val result = useCase()
 
         // Then / Assert
-        Assertions.assertEquals(countryFlow, result)
+        assertEquals(countryFlow, result)
     }
 }
