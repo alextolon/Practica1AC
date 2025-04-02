@@ -15,7 +15,8 @@ class CountriesRepository @Inject constructor(
 ) {
     // Función que recupera el set de países al completo de la BD que, si estuviera
     // vacía tiraría de la API y rellenaría la BD
-    val countries : Flow<List<Country>> = localDataSource.countries.transform { localCountries ->
+    val countries : Flow<List<Country>>
+        get() = localDataSource.countries.transform { localCountries ->
         val countries = localCountries.takeIf { it.isNotEmpty() }
             ?: remoteDataSource.fetchAllCountries().also {
                 localDataSource.saveCountries(it)

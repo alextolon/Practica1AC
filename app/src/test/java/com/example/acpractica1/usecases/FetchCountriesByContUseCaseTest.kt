@@ -1,0 +1,21 @@
+package com.example.acpractica1.usecases
+
+import com.example.acpractica1.sampleCountries
+import kotlinx.coroutines.flow.flowOf
+import org.junit.Assert.*
+import org.junit.Test
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+
+class FetchCountriesByContUseCaseTest{
+    @Test
+    fun `Invoke calls repository`() {
+        val countryFlow = flowOf(sampleCountries("Argentina", "Uruguay"))
+        val usecase = FetchCountriesByContUseCase(mock {
+            on { fetchCountriesByCont( "South America")}  doReturn countryFlow })
+
+        val result = usecase("South America")
+
+        assertEquals(countryFlow, result)
+    }
+}

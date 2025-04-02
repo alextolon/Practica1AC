@@ -75,4 +75,3 @@ class HomeViewModel @Inject constructor(
         data class FilterCountries(val optSelected: String) : UiAction()
     }
 }
-

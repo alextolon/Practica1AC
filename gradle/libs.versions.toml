@@ -23,6 +23,7 @@ hiltNavigationCompose = "1.2.0"
 # Añadido para testing
 mockitoKotlin = "5.3.1"
 junitJupiter = "5.8.1"
+turbine = "1.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -57,6 +58,9 @@ hilt-compiler = {group = "com.google.dagger", name = "hilt-compiler", version.re
 # Para mockito
 mockito-kotlin = { group = "org.mockito.kotlin",  name = "mockito-kotlin", version.ref = "mockitoKotlin" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
+# Para testear VM
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref ="coroutines" }
+turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

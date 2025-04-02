@@ -1,11 +1,11 @@
-package com.example.acpractica1
+package com.example.acpractica1.usecases
 
-import com.example.acpractica1.usecases.FetchAllCountriesUseCase
+import com.example.acpractica1.sampleCountries
 import kotlinx.coroutines.flow.flowOf
+import org.junit.Assert.*
+import org.junit.Test
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.Test
 
 class FetchAllCountriesUseCaseTest {
     @Test
