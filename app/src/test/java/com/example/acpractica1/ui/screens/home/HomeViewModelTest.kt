@@ -3,7 +3,7 @@ package com.example.acpractica1.ui.screens.home
 import app.cash.turbine.test
 import com.example.acpractica1.data.CoroutinesTestRule
 import com.example.acpractica1.sampleCountries
-import com.example.acpractica1.ui.screens.detail.DetailViewModel.UiState
+import com.example.acpractica1.ui.screens.home.HomeViewModel.UiState
 import com.example.acpractica1.usecases.FetchAllCountriesUseCase
 import com.example.acpractica1.usecases.FetchCountriesByContUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -28,7 +28,7 @@ class HomeViewModelTest {
     // Gestiona la ejecución de corrutinas para estos tests
     @get: Rule
     val coroutinesTestRule = CoroutinesTestRule()
-    // Property que simula una instancia de FindAllCountriesUseCase
+    // Property que simula una instancia de FetchAllCountriesUseCase
     @Mock
     lateinit var fetchAllCountriesUseCase: FetchAllCountriesUseCase
     // Property que simula una instancia de FetchCountriesByContUseCase
@@ -52,15 +52,26 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `Countries requested if UI ready`(): Unit = runTest {
+    fun `Countries requested if UI ready (loading true)`(): Unit = runTest {
         val countries = sampleCountries("Argentina", "Spain")
         whenever(fetchAllCountriesUseCase()).thenReturn(flowOf(countries))
 
         vm.onUiAction(HomeViewModel.UiAction.LoadCountries)
         // Territorio turbine (test) (awaitItem())
         vm.state.test {
-            assertEquals(UiState(loading = false), awaitItem())
-            assertEquals(countries, awaitItem())
+            assertEquals(UiState(loading = true, countries = emptyList(), netAvailable = true), awaitItem())
+        }
+    }
+
+    @Test
+    fun `Countries requested if UI ready (loading false)`(): Unit = runTest {
+        val countries = sampleCountries("Argentina", "Spain")
+        whenever(fetchAllCountriesUseCase()).thenReturn(flowOf(countries))
+
+        vm.onUiAction(HomeViewModel.UiAction.LoadCountries)
+        // Territorio turbine (test) (awaitItem())
+        vm.state.test {
+            assertEquals(UiState(loading = false, countries = countries, netAvailable = true), awaitItem())
         }
     }
 

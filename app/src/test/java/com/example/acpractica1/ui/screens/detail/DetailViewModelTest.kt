@@ -48,7 +48,7 @@ class DetailViewModelTest {
     fun `UI updated with the country on start`(): Unit = runTest {
         // Territorio turbine (test) (awaitItem())
         vm.state.test {
-            assertEquals(loading, awaitItem())
+            assertEquals(DetailViewModel.UiState(loading = true), awaitItem())
             assertEquals(country, awaitItem())
         }
     }
@@ -58,7 +58,7 @@ class DetailViewModelTest {
         // Territorio turbine (test) (awaitItem())
         vm.state.test {
 
-            assertEquals(loading, awaitItem())
+            assertEquals(DetailViewModel.UiState(loading = true), awaitItem())
             assertEquals((sampleCountry("Argentina")), awaitItem())
 
             vm.onAction(DetailAction.FriendlyClick)

@@ -34,6 +34,14 @@ class FakeLocalDataSource : CountriesLocalDataSource {
     override suspend fun saveCountries(countries: List<Country>) {
         inMemoryCountries.value = countries
     }
+
+    override suspend fun updateGaymable(country: Country) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun isEmpty(): Boolean {
+        TODO("Not yet implemented")
+    }
 }
 
 class FakeRemoteDataSource : CountriesRemoteDataSource {
@@ -44,7 +52,7 @@ class FakeRemoteDataSource : CountriesRemoteDataSource {
 
     override suspend fun fetchAllCountries() = countries
 
-    override fun fetchCountriesByCont("South America"): Flow<List<Country>> = countriesCont
+    override suspend fun fetchCountriesByCont(continent: String): List<Country> = countriesCont
 
     override suspend fun findCountryByName(name: String): Country = countries.first { it.cname == name }
 }
