@@ -3,6 +3,7 @@ package com.example.acpractica1.ui.screens.detail
 import app.cash.turbine.test
 import com.example.acpractica1.data.CoroutinesTestRule
 import com.example.acpractica1.sampleCountry
+import com.example.acpractica1.ui.screens.detail.DetailViewModel.UiState
 import com.example.acpractica1.usecases.CambiaFriendlyUseCase
 import com.example.acpractica1.usecases.FindCountryByNameUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -46,20 +47,28 @@ class DetailViewModelTest {
 
     @Test
     fun `UI updated with the country on start`(): Unit = runTest {
+        //val country = sampleCountry("Argentina")
         // Territorio turbine (test) (awaitItem())
         vm.state.test {
-            assertEquals(DetailViewModel.UiState(loading = true), awaitItem())
-            assertEquals(country, awaitItem())
+            assertEquals(UiState(loading = true, country = null), awaitItem())
+        }
+    }
+
+    @Test
+    fun `UI updated with the country after`(): Unit = runTest {
+        val country = sampleCountry("Argentina")
+        // Territorio turbine (test) (awaitItem())
+        vm.state.test {
+            assertEquals(UiState(loading = true, country = country), awaitItem())
         }
     }
 
     @Test
     fun `Gaymable is updated in local data source`() = runTest {
+        val country = sampleCountry("Argentina")
         // Territorio turbine (test) (awaitItem())
         vm.state.test {
-
-            assertEquals(DetailViewModel.UiState(loading = true), awaitItem())
-            assertEquals((sampleCountry("Argentina")), awaitItem())
+            assertEquals(UiState(loading = false, country = country), awaitItem())
 
             vm.onAction(DetailAction.FriendlyClick)
 
