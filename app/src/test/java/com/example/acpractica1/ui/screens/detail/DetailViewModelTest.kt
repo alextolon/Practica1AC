@@ -72,7 +72,7 @@ class DetailViewModelTest {
 
             vm.onAction(DetailAction.FriendlyClick)
 
-            runCurrent()
+            runCurrent()  // Ejecuta la corrutina que no puede runTest
             assertEquals(sampleCountry("Argentina").copy(gaymable = true), awaitItem())
         }
     }
