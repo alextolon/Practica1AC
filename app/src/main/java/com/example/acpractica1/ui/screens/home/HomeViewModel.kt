@@ -7,13 +7,10 @@ import com.example.acpractica1.domain.Country
 import com.example.acpractica1.usecases.FetchAllCountriesUseCase
 import com.example.acpractica1.usecases.FetchCountriesByContUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,36 +26,32 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
 
     // Flujo que concentra las acciones a las que debe estar atento este ViewModel para la UI
-    private val _uiAction = MutableSharedFlow<UiAction>()
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val state: StateFlow<UiState> = _uiAction
-        .flatMapLatest { action ->
-            when (action) {  // Discrimina en función de la acción solicitada (Totalidad o filtrado)
-                is UiAction.LoadCountries -> {
-                        fetchAllCountriesUseCase().map { UiState(countries = it) }
-                }
-
-
-                is UiAction.FilterCountries -> {
-                    when(action.optSelected){
-                        "All(asc)"  -> fetchAllCountriesUseCase().map { UiState(countries = it) }
-                        "All(desc)" -> fetchAllCountriesUseCase().map { it -> UiState(countries = it.sortedByDescending { it.cname }) }
-                        else -> fetchCountriesByContUseCase(action.optSelected).map { UiState(countries = it) }
-                    }
-                }
-                /* null -> TODO() */
-            }
-        }
-        .stateIn(  // Así se convierte a estado
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = UiState(loading = true)
-        )
+    // private val _uiAction = MutableSharedFlow<UiAction>()
+    private val _state = MutableStateFlow(UiState())
+    //val state: StateFlow<UiState> = _uiAction
+    val state : StateFlow<UiState> = _state.asStateFlow()
 
     fun onUiAction(action: UiAction) {
         viewModelScope.launch {
-            _uiAction.emit(action)
+            _state.value = UiState(loading = true)
+
+            when (action) {  // Discrimina en función de la acción solicitada (Totalidad o filtrado)
+                is UiAction.LoadCountries -> {
+                    fetchAllCountriesUseCase().collect { countries ->
+                        _state.value = UiState(countries = countries) }
+                }
+
+                is UiAction.FilterCountries -> {
+                    when(action.optSelected){
+                        "All(asc)"  -> fetchAllCountriesUseCase().collect { countries ->
+                            _state.value = UiState(countries = countries) }
+                        "All(desc)" -> fetchAllCountriesUseCase().map { countries ->
+                            _state.value = UiState(countries = countries.sortedByDescending { it.cname }) }
+                        else -> fetchCountriesByContUseCase(action.optSelected).collect { countries ->
+                            _state.value = UiState(countries = countries) }
+                    }
+                }
+            }
         }
     }
 

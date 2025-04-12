@@ -21,6 +21,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.times
 import org.mockito.kotlin.whenever
+import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
@@ -52,39 +53,31 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `Countries requested if UI ready (loading true)`(): Unit = runTest {
+    fun `Countries requested if UI ready`(): Unit = runTest {
         val countries = sampleCountries("Argentina", "Spain")
-        whenever(fetchAllCountriesUseCase()).thenReturn(flowOf(countries))
+        whenever(fetchAllCountriesUseCase.invoke()).thenReturn(flowOf(countries))
 
-        vm.onUiAction(HomeViewModel.UiAction.LoadCountries)
         // Territorio turbine (test) (awaitItem())
-        vm.state.test {
-            assertEquals(UiState(loading = true, countries = emptyList(), netAvailable = true), awaitItem())
-        }
-    }
-
-    @Test
-    fun `Countries requested if UI ready (loading false)`(): Unit = runTest {
-        val countries = sampleCountries("Argentina", "Spain")
-        whenever(fetchAllCountriesUseCase()).thenReturn(flowOf(countries))
-
-        vm.onUiAction(HomeViewModel.UiAction.LoadCountries)
-        // Territorio turbine (test) (awaitItem())
-        vm.state.test {
-            assertEquals(UiState(loading = false, countries = countries, netAvailable = true), awaitItem())
+        vm.state.test(timeout = 5.seconds) {
+            assertEquals(UiState(), awaitItem()) // Comprueba el estado antes de tirar de VM
+            vm.onUiAction(HomeViewModel.UiAction.LoadCountries)
+            assertEquals(UiState(loading = true), awaitItem())   // Ahora verifica
+            assertEquals(UiState(countries = countries), awaitItem())
+            cancelAndIgnoreRemainingEvents()  // Comentar para ver qué pasa
         }
     }
 
     @Test
     fun `Countries selected by continent requested if UI ready`(): Unit = runTest {
         val countries = sampleCountries("Argentina", "Uruguay")
-        whenever(fetchCountriesByContUseCase(optSelected = "South America")).thenReturn(flowOf(countries))
+        whenever(fetchCountriesByContUseCase.invoke(optSelected = "South America")).thenReturn(flowOf(countries))
 
-        vm.onUiAction(HomeViewModel.UiAction.FilterCountries(optSelected = "South America"))
-
-        vm.state.test {
-            assertEquals(UiState(loading = false), awaitItem())
-            assertEquals(countries, awaitItem())
+        vm.state.test(timeout = 5.seconds) {
+            assertEquals(UiState(), awaitItem()) // Comprueba el estado antes de tirar de VM
+            vm.onUiAction(HomeViewModel.UiAction.FilterCountries(optSelected = "South America"))
+            assertEquals(UiState(loading = true), awaitItem())
+            assertEquals(UiState(countries = countries), awaitItem())
+            cancelAndIgnoreRemainingEvents()  // Comentar para ver qué pasa
         }
     }
 }
