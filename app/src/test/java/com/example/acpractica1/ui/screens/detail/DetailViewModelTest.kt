@@ -4,6 +4,7 @@ import app.cash.turbine.test
 import com.example.acpractica1.data.CoroutinesTestRule
 import com.example.acpractica1.sampleCountry
 import com.example.acpractica1.ui.screens.detail.DetailViewModel.UiState
+import com.example.acpractica1.ui.screens.home.HomeViewModel
 import com.example.acpractica1.usecases.CambiaFriendlyUseCase
 import com.example.acpractica1.usecases.FindCountryByNameUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -18,6 +19,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
+import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
@@ -39,41 +41,33 @@ class DetailViewModelTest {
     // Se ejecuta antes de cada test solicitado
     @Before
     fun setUp() {
-        // Simula el comportamiento de findCountryByNameUseCase
-        whenever(findCountryByNameUseCase("Argentina")).thenReturn(flowOf(country))
         // Genera una instancia simulada de DetailViewModel con datos y properties mockeados
         vm = DetailViewModel("Argentina", findCountryByNameUseCase, cambiaFriendlyUseCase)
     }
 
     @Test
     fun `UI updated with the country on start`(): Unit = runTest {
-        //val country = sampleCountry("Argentina")
+        // Simula el comportamiento de findCountryByNameUseCase
+        whenever(findCountryByNameUseCase.invoke("Argentina")).thenReturn(flowOf(country))
         // Territorio turbine (test) (awaitItem())
-        vm.state.test {
-            assertEquals(UiState(loading = true, country = null), awaitItem())
-        }
-    }
-
-    @Test
-    fun `UI updated with the country after`(): Unit = runTest {
-        val country = sampleCountry("Argentina")
-        // Territorio turbine (test) (awaitItem())
-        vm.state.test {
-            assertEquals(UiState(loading = true, country = country), awaitItem())
+        vm.state.test(timeout = 5.seconds) {
+            assertEquals(UiState(), awaitItem()) // Comprueba el estado antes de tirar de VM
+            vm.onAction(DetailAction.LoadCountry("Argentina"))
+            assertEquals(UiState(loading = true), awaitItem())
+            assertEquals(UiState(country = country), awaitItem())
         }
     }
 
     @Test
     fun `Gaymable is updated in local data source`() = runTest {
         val country = sampleCountry("Argentina")
+        whenever(cambiaFriendlyUseCase.invoke(country))
         // Territorio turbine (test) (awaitItem())
-        vm.state.test {
-            assertEquals(UiState(loading = false, country = country), awaitItem())
-
+        vm.state.test(timeout = 5.seconds) {
+            assertEquals(UiState(), awaitItem()) // Comprueba el estado antes de tirar de VM
             vm.onAction(DetailAction.FriendlyClick)
-
-            runCurrent()  // Ejecuta la corrutina que no puede runTest
-            assertEquals(sampleCountry("Argentina").copy(gaymable = true), awaitItem())
+            assertEquals(UiState(loading = true), awaitItem())
+            assertEquals(country.copy(gaymable = true), awaitItem())
         }
     }
 }

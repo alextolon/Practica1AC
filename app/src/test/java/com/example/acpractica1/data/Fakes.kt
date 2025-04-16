@@ -26,7 +26,7 @@ class FakeLocalDataSource : CountriesLocalDataSource {
     override val countries = inMemoryCountries
 
     override fun fetchCountriesByCont(continent: String): Flow<List<Country>> =
-        inMemoryCountries.transform {  }
+        inMemoryCountries.transform { countries ->    }
 
     override fun findCountryByName(name: String): Flow<Country?> =
         inMemoryCountries.map { it.firstOrNull { country -> country.cname == name } }

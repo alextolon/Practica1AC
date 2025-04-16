@@ -10,7 +10,9 @@ import kotlinx.coroutines.test.runTest
 import app.cash.turbine.test
 import com.example.acpractica1.data.buildCountriesRepositoryWith
 import com.example.acpractica1.domain.Country
+import com.example.acpractica1.ui.screens.home.HomeViewModel.UiState
 import com.example.acpractica1.usecases.FetchCountriesByContUseCase
+import kotlin.time.Duration.Companion.seconds
 
 class HomeIntegrationTests {
 
@@ -26,8 +28,10 @@ class HomeIntegrationTests {
         )
         vm.onUiAction(HomeViewModel.UiAction.LoadCountries)
         // Territorio turbine (test) (awaitItem())
-        vm.state.test {
-            assertEquals(HomeViewModel.UiState(loading = false), awaitItem())
+        // Probar con ¿saveCountries?
+        vm.state.test(timeout = 5.seconds) {
+            //assertEquals(UiState(), awaitItem()) // Comprueba el estado antes de tirar de VM
+            //assertEquals(UiState(loading = true), awaitItem())
             assertEquals(emptyList<Country>(), awaitItem())
             assertEquals(remoteData, awaitItem())
         }

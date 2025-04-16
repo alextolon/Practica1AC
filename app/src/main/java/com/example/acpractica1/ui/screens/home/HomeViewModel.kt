@@ -42,7 +42,7 @@ class HomeViewModel @Inject constructor(
                 }
 
                 is UiAction.FilterCountries -> {
-                    when(action.optSelected){
+                    when(action.optSelected) { // Discrimina entre las opciones de filtrado
                         "All(asc)"  -> fetchAllCountriesUseCase().collect { countries ->
                             _state.value = UiState(countries = countries) }
                         "All(desc)" -> fetchAllCountriesUseCase().map { countries ->
