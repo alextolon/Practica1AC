@@ -36,7 +36,7 @@ class DetailViewModelTest {
     lateinit var cambiaFriendlyUseCase: CambiaFriendlyUseCase
     // Property que simula una instancia de DetailViewModel
     private lateinit var vm : DetailViewModel
-
+    // Como ahora sólo interviene un país
     private val country = sampleCountry("Argentina")
     // Se ejecuta antes de cada test solicitado
     @Before
@@ -52,8 +52,11 @@ class DetailViewModelTest {
         // Territorio turbine (test) (awaitItem())
         vm.state.test(timeout = 5.seconds) {
             assertEquals(UiState(), awaitItem()) // Comprueba el estado antes de tirar de VM
+            // Ahora que tenemos LoadCountry, se le pasa el país de prueba
             vm.onAction(DetailAction.LoadCountry("Argentina"))
+            // Se comprueba que el tiempo de carga existe
             assertEquals(UiState(loading = true), awaitItem())
+            // Tras lo anterior se comprueba que ha cargado el país
             assertEquals(UiState(country = country), awaitItem())
         }
     }
