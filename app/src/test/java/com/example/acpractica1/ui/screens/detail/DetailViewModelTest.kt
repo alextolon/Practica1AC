@@ -4,13 +4,10 @@ import app.cash.turbine.test
 import com.example.acpractica1.data.CoroutinesTestRule
 import com.example.acpractica1.sampleCountry
 import com.example.acpractica1.ui.screens.detail.DetailViewModel.UiState
-import com.example.acpractica1.ui.screens.home.HomeViewModel
 import com.example.acpractica1.usecases.CambiaFriendlyUseCase
 import com.example.acpractica1.usecases.FindCountryByNameUseCase
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.runCurrent
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
@@ -21,7 +18,6 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
 import kotlin.time.Duration.Companion.seconds
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
 class DetailViewModelTest {
 
@@ -64,13 +60,18 @@ class DetailViewModelTest {
     @Test
     fun `Gaymable is updated in local data source`() = runTest {
         val country = sampleCountry("Argentina")
-        whenever(cambiaFriendlyUseCase.invoke(country))
+        whenever(cambiaFriendlyUseCase.invoke(country)).thenReturn(Unit)
+        whenever(findCountryByNameUseCase.invoke("Argentina")).thenReturn(flowOf(country))
         // Territorio turbine (test) (awaitItem())
         vm.state.test(timeout = 5.seconds) {
             assertEquals(UiState(), awaitItem()) // Comprueba el estado antes de tirar de VM
+            vm.onAction(DetailAction.LoadCountry("Argentina"))
+            assertEquals(UiState(loading = true), awaitItem())
+            assertEquals(UiState(country = country), awaitItem())
             vm.onAction(DetailAction.FriendlyClick)
             assertEquals(UiState(loading = true), awaitItem())
-            assertEquals(country.copy(gaymable = true), awaitItem())
+            assertEquals(UiState(country = country.copy(gaymable = true)), awaitItem())
+            cancelAndConsumeRemainingEvents()
         }
     }
 }

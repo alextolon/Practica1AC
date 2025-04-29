@@ -3,20 +3,12 @@ package com.example.acpractica1.ui.screens.detail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.acpractica1.domain.Country
-import com.example.acpractica1.ui.screens.home.HomeViewModel.UiAction
-import com.example.acpractica1.ui.screens.home.HomeViewModel.UiState
 import com.example.acpractica1.usecases.CambiaFriendlyUseCase
 import com.example.acpractica1.usecases.FindCountryByNameUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -38,49 +30,31 @@ class DetailViewModel @Inject constructor(
 
     // Property que recoge el estado de la UI
     private val _state = MutableStateFlow(UiState())
-    //_state.value = findCountryByNameUseCase(name).map { country -> UiState(country = country) }
+    //
     val state: StateFlow<UiState> = _state.asStateFlow()
-    //val myUiState = UiState(loading = false, country = Country("USA"))
-    //val countryFlow1: Flow<Country?> = myUiState1.countryToFlow()
-    /*init {
-        viewModelScope.launch {
-            _state.value = UiState(loading = true)
-            _state.value = UiState(
-                loading = false,
-                country = findCountryByNameUseCase(name).map { country -> UiState(country = country) })
-        }
-    }*/
 
     // Función para concentrar las acciones a las que debe estar atento este ViewModel
     fun onAction(action: DetailAction) {
-            _state.value = UiState(loading = true)
+        viewModelScope.launch {
             when (action) {
                 is DetailAction.LoadCountry -> {
-                    viewModelScope.launch {
-                        findCountryByNameUseCase(action.countryName).collect {
-                            _state.value = UiState(country = it)
-                        }
+                    _state.value = UiState(loading = true)
+                    findCountryByNameUseCase(action.countryName).collect { country ->
+                        _state.value = UiState(country = country)
                     }
                 }
-                is DetailAction.FriendlyClick -> onFriendlyClick()
-            }
-    }
-
-    private fun onFriendlyClick() {
-        // Ahora cambiar esto
-        state.value.country?.let {
-            viewModelScope.launch {
-                cambiaFriendlyUseCase(it)
+                is DetailAction.FriendlyClick -> {
+                    val currentCountry = _state.value.country
+                    if(currentCountry != null) {
+                        _state.value = UiState(loading = true)
+                        cambiaFriendlyUseCase(currentCountry)
+                        _state.value = UiState(country = currentCountry.copy(gaymable = true))
+                    }
+                }
             }
         }
     }
-    /*val state: StateFlow<UiState> = findCountryByNameUseCase(name)
-        .map { country -> UiState(country = country) }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = UiState(loading = true)
-        )*/
+
     // Data class para almacenar los datos del estado
     data class UiState(
         val loading: Boolean = false,
