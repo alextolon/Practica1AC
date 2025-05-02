@@ -48,7 +48,11 @@ class DetailViewModel @Inject constructor(
                     if(currentCountry != null) {
                         _state.value = UiState(loading = true)
                         cambiaFriendlyUseCase(currentCountry)
-                        _state.value = UiState(country = currentCountry.copy(gaymable = true))
+                        findCountryByNameUseCase(currentCountry.cname)
+                            .collect { updatedCountry ->
+                                _state.value = UiState(country = updatedCountry)
+                            }
+                        //_state.value = UiState(country = currentCountry.copy(gaymable = true))
                     }
                 }
             }

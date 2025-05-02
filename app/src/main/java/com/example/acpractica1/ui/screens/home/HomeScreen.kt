@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.Intent.makeMainActivity
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.provider.Settings
@@ -23,7 +22,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -70,6 +68,7 @@ import com.example.acpractica1.R
 import com.example.acpractica1.domain.Country
 import com.example.acpractica1.ui.theme.GreenTAB
 import com.example.acpractica1.ui.theme.Pink60
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlin.system.exitProcess
 
@@ -115,13 +114,18 @@ fun Screen(content: @Composable () -> Unit) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+// Sobrecargar la fun HomeScreen para desmembrarla de modo que
+// la primera se coma las dependencias,
+
 @Composable
 fun HomeScreen(
     onCountryClick: (Country) -> Unit,
     vm: HomeViewModel = hiltViewModel()
 ) {
-    val homeState = rememberHomeState()
+    // Necesito recoger el estado y almacenarlo
+    //vm.onUiAction(HomeViewModel.UiAction.LoadCountries)
+
+    // Ahora se llama a la función simplificada para test
     // Lanzamiento de la corrutina que vigila los cambios de estado de la UI
     val coroutineScope = rememberCoroutineScope()
     val activity = (LocalContext.current as Activity)
@@ -139,9 +143,42 @@ fun HomeScreen(
             /*startActivity(enableWifiIntent)*/  //enableWifi(this)
         )
     }
+    val state by vm.state.collectAsState()
+    HomeScreen(
+        onCountryClick = onCountryClick,
+        state = state
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeScreen(
+    onCountryClick: (Country) -> Unit,
+    state: StateFlow<HomeViewModel.UiState>
+    //vm: HomeViewModel = hiltViewModel()
+) {
+    val homeState = rememberHomeState()
+    /* Lanzamiento de la corrutina que vigila los cambios de estado de la UI
+    val coroutineScope = rememberCoroutineScope()
+    val activity = (LocalContext.current as Activity)
+    if (verifConnect(activity) != NetworkType.NoDisponible) {
+        LaunchedEffect(Unit) {
+            coroutineScope.launch {
+                //vm.onUiReady()
+                vm.onUiAction(HomeViewModel.UiAction.LoadCountries)
+            }
+        }
+    } else {
+        // ConnectDialog composable
+        ConnectDialog(
+            message = "No hay redes disponibles",
+            /*startActivity(enableWifiIntent)*/  //enableWifi(this)
+        )
+    }*/
 
     Screen {
         Scaffold(
+            state = state,
             topBar = {
                 TopAppBar(
                     colors = TopAppBarDefaults.centerAlignedTopAppBarColors(

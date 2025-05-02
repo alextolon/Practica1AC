@@ -45,9 +45,14 @@ class DetailIntegrationsTest {
     @Test
     fun `Gaymable is updated in local data source`() = runTest {
         vm.state.test(timeout = 5.seconds) {
+            // Cómo está antes de nada
             assertEquals(DetailViewModel.UiState(), awaitItem())
+            // Se empieza cargando el país para tener un estado inicial
+            vm.onAction(DetailAction.LoadCountry("Argentina"))
+            assertEquals(DetailViewModel.UiState(loading = true), awaitItem())
+            assertEquals(DetailViewModel.UiState(country = sampleCountry("Argentina")), awaitItem())
+            // Ahora testea cuando se hace clic en el botón Gaymable
             vm.onAction(DetailAction.FriendlyClick)
-            //runCurrent()
             assertEquals(DetailViewModel.UiState(loading = true), awaitItem())
             assertEquals(DetailViewModel.UiState(country = sampleCountry("Argentina").copy(gaymable = true)), awaitItem())
             cancelAndConsumeRemainingEvents()
@@ -55,12 +60,12 @@ class DetailIntegrationsTest {
     }
 
     // Atento el buildViewModel que debería construirse es el del DetailViewModel
-    private fun buildViewModelWith(
+    /*private fun buildViewModelWith(
         localData: List<Country> = emptyList(),
         remoteData: List<Country> = emptyList()
     ): HomeViewModel {
         val fetchAllCountriesUseCase = FetchAllCountriesUseCase(buildCountriesRepositoryWith(localData, remoteData))
         val fetchCountriesByContUseCase = FetchCountriesByContUseCase(buildCountriesRepositoryWith(localData, remoteData))
         return HomeViewModel(fetchAllCountriesUseCase, fetchCountriesByContUseCase)
-    }
+    }*/
 }

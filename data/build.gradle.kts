@@ -16,7 +16,7 @@ dependencies {
     // No hace falta implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.hilt.core)
     //implementation(libs.hilt.android)
-    // Iría con ksp en todon caso implementation(libs.hilt.compiler)
+    // Iría con ksp en todo_ caso implementation(libs.hilt.compiler)
     testImplementation(libs.junit)
     testImplementation(libs.mockito.kotlin)
     testImplementation(libs.junit.jupiter)

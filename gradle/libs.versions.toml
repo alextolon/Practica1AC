@@ -24,6 +24,7 @@ hiltNavigationCompose = "1.2.0"
 mockitoKotlin = "5.3.1"
 junitJupiter = "5.8.1"
 turbine = "1.1.0"
+test = "1.6.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -61,6 +62,9 @@ junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.r
 # Para testear VM
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref ="coroutines" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine"}
+# Para complementar lo que viene por defecto para tests UI
+androidx-test-core = { group = "androidx.test", name = "core-ktx", version.ref = "test" }
+androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "test" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -36,11 +36,17 @@ class FakeLocalDataSource : CountriesLocalDataSource {
     }
 
     override suspend fun updateGaymable(country: Country) {
-        TODO("Not yet implemented")
+        val countries = inMemoryCountries.value
+        val index = countries.indexOfFirst { it.cname == country.cname }
+        if (index >= 0) {
+            val updatedCountries = countries.toMutableList()
+            updatedCountries[index] = country.copy(gaymable = true)
+            inMemoryCountries.value = updatedCountries
+        }
     }
 
     override suspend fun isEmpty(): Boolean {
-        TODO("Not yet implemented")
+        return inMemoryCountries.value.isEmpty()
     }
 }
 
