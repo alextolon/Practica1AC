@@ -55,6 +55,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -127,6 +128,7 @@ fun HomeScreen(
 
     // Ahora se llama a la función simplificada para test
     // Lanzamiento de la corrutina que vigila los cambios de estado de la UI
+
     val coroutineScope = rememberCoroutineScope()
     val activity = (LocalContext.current as Activity)
     if (verifConnect(activity) != NetworkType.NoDisponible) {
@@ -145,40 +147,25 @@ fun HomeScreen(
     }
     val state by vm.state.collectAsState()
     HomeScreen(
-        onCountryClick = onCountryClick,
-        state = state
+        //onCountryClick = onCountryClick,
+        state = state,
+        onFilterCountries = { continentSelected ->
+            vm.onUiAction(HomeViewModel.UiAction.FilterCountries(continentSelected))
+        }
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    onCountryClick: (Country) -> Unit,
-    state: StateFlow<HomeViewModel.UiState>
+    //onCountryClick: (Country) -> Unit,
+    state: HomeViewModel.UiState,
+    onFilterCountries: (String) -> Unit = {}
     //vm: HomeViewModel = hiltViewModel()
 ) {
     val homeState = rememberHomeState()
-    /* Lanzamiento de la corrutina que vigila los cambios de estado de la UI
-    val coroutineScope = rememberCoroutineScope()
-    val activity = (LocalContext.current as Activity)
-    if (verifConnect(activity) != NetworkType.NoDisponible) {
-        LaunchedEffect(Unit) {
-            coroutineScope.launch {
-                //vm.onUiReady()
-                vm.onUiAction(HomeViewModel.UiAction.LoadCountries)
-            }
-        }
-    } else {
-        // ConnectDialog composable
-        ConnectDialog(
-            message = "No hay redes disponibles",
-            /*startActivity(enableWifiIntent)*/  //enableWifi(this)
-        )
-    }*/
-
     Screen {
         Scaffold(
-            state = state,
             topBar = {
                 TopAppBar(
                     colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
@@ -206,7 +193,7 @@ fun HomeScreen(
                     actions = {
                         TopAppBarDropdownMenu { continentSelected ->
                             //vm.onMenuSelected(continentSelected)
-                            vm.onUiAction(HomeViewModel.UiAction.FilterCountries(continentSelected))
+                            onFilterCountries(continentSelected)
                         }
                     },
                     scrollBehavior = homeState.scrollBehavior
@@ -217,14 +204,15 @@ fun HomeScreen(
 
             // Al utilizar StateFlow en HomeViewModel (estructura Kotlin pero no de Compose)
             // hay que transformarlo ahora en un estado de Compose
-            val state by vm.state.collectAsState()
+            //val state by vm.state.collectAsState()
             // Controla lo que se muestra si está cargando o no
             if (state.loading) {
                 // En caso de estar cargando, muestra el circulito
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(padding),
+                        .padding(padding)
+                        .testTag("LoadingOK"), //añade al árbol de test
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator()
@@ -235,8 +223,8 @@ fun HomeScreen(
                 contentPadding = padding //Evita que TopBar coma zona de contenido
             ) {
                 // Aquí generas cada item de lista a partir
-                items(state.countries) {
-                    CountryItem(country = it) { onCountryClick(it) }
+                items(state.countries.size) { index ->
+                    CountryItem(country = state.countries[index]) { state.countries[index] }
                 }
             }
         }

@@ -58,14 +58,4 @@ class DetailIntegrationsTest {
             cancelAndConsumeRemainingEvents()
         }
     }
-
-    // Atento el buildViewModel que debería construirse es el del DetailViewModel
-    /*private fun buildViewModelWith(
-        localData: List<Country> = emptyList(),
-        remoteData: List<Country> = emptyList()
-    ): HomeViewModel {
-        val fetchAllCountriesUseCase = FetchAllCountriesUseCase(buildCountriesRepositoryWith(localData, remoteData))
-        val fetchCountriesByContUseCase = FetchCountriesByContUseCase(buildCountriesRepositoryWith(localData, remoteData))
-        return HomeViewModel(fetchAllCountriesUseCase, fetchCountriesByContUseCase)
-    }*/
 }
